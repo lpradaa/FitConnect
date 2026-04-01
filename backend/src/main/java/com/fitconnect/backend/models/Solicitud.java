@@ -16,6 +16,14 @@ public class Solicitud {
 
     private LocalDateTime fechaSolicitud;
 
+    @ManyToOne
+    @JoinColumn(name = "emisor_id")
+    private Usuario emisor;
+
+    @ManyToOne
+    @JoinColumn(name = "receptor_id")
+    private Usuario receptor;
+
     public Solicitud() {
         this.fechaSolicitud = LocalDateTime.now();
     }
@@ -26,6 +34,21 @@ public class Solicitud {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
     public LocalDateTime getFechaSolicitud() { return fechaSolicitud; }
+    public Usuario getEmisor() {
+        return emisor;
+    }
+
+    public void setEmisor(Usuario emisor) {
+        this.emisor = emisor;
+    }
+
+    public Usuario getReceptor() {
+        return receptor;
+    }
+
+    public void setReceptor(Usuario receptor) {
+        this.receptor = receptor;
+    }
 }
     
 

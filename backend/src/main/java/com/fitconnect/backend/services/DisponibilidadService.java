@@ -1,9 +1,10 @@
 package com.fitconnect.backend.services;
 
-import com.fitconnect.backend.models.Disponibilidad;
+import com.fitconnect.backend.dtos.DisponibilidadDTO;
 import java.util.List;
 
 public interface DisponibilidadService {
-    Disponibilidad agregarHorario(Disponibilidad disponibilidad);
-    List<Disponibilidad> obtenerHorariosDeUsuario(Long usuarioId);
+    DisponibilidadDTO agregarHorario(String emailUsuario, DisponibilidadDTO dto);
+    List<DisponibilidadDTO> obtenerHorariosDeUsuario(String emailUsuario);
+    void eliminarHorario(String emailUsuario, Long idHorario);
 }

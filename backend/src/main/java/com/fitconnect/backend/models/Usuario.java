@@ -26,6 +26,12 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "nivel")
+    private String nivel;
+
+    @Column(name = "objetivos")
+    private String objetivos;
+
     private Integer edad;
     private String genero;
     private Float peso;
@@ -61,4 +67,20 @@ public class Usuario {
 
     public Gimnasio getGimnasio() { return gimnasio; }
     public void setGimnasio(Gimnasio gimnasio) { this.gimnasio = gimnasio; }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
+    }
+
+    public String getObjetivos() {
+        return objetivos;
+    }
+
+    public void setObjetivos(String objetivos) {
+        this.objetivos = objetivos;
+    }
 }

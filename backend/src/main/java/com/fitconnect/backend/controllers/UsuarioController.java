@@ -1,0 +1,63 @@
+package com.fitconnect.backend.controllers;
+
+import com.fitconnect.backend.dtos.UsuarioPerfilDTO;
+import com.fitconnect.backend.dtos.UsuarioRegistroDTO;
+import com.fitconnect.backend.dtos.UsuarioResponseDTO;
+import com.fitconnect.backend.services.UsuarioService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+@RestController // Indica que esta clase responderá peticiones web devolviendo JSON
+@RequestMapping("/api/usuarios") // Todas las rutas aquí empezarán por esto
+@CrossOrigin(origins = "*") // Permite que tu frontend en Angular se conecte sin bloqueos de seguridad del navegador
+public class UsuarioController {
+
+    private final UsuarioService usuarioService;
+
+    // Inyectamos el servicio
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
+    /**
+     * Endpoint de Registro
+     * POST http://localhost:8080/api/usuarios/registro
+     */
+    @PostMapping("/registro")
+    public ResponseEntity<?> registrar(@RequestBody UsuarioRegistroDTO dto) {
+        try {
+            // Le pasamos el DTO al servicio para que haga la magia (validar, cifrar, guardar)
+            UsuarioResponseDTO usuarioCreado = usuarioService.registrarUsuario(dto);
+            
+            // Si todo va bien, devolvemos un 200 OK con los datos seguros (sin contraseña)
+            return ResponseEntity.ok(usuarioCreado);
+            
+        } catch (IllegalArgumentException e) {
+            // Si el email ya existía, devolvemos un error 400 Bad Request con el mensaje
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+/**
+     * Endpoint para Actualizar Perfil
+     * PUT http://localhost:8080/api/usuarios/perfil
+     */
+    @PutMapping("/perfil")
+    public ResponseEntity<?> actualizarPerfil(@RequestBody UsuarioPerfilDTO dto) {
+        try {
+            // ¡MAGIA! Sacamos el email directamente del Token JWT del usuario que hace la petición
+            String emailLogueado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            // Actualizamos su perfil de forma segura
+            UsuarioResponseDTO usuarioActualizado = usuarioService.actualizarPerfil(emailLogueado, dto);
+            
+            return ResponseEntity.ok(usuarioActualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error inesperado al actualizar el perfil.");
+        }
+    }
+
+}
