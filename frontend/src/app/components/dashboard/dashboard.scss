@@ -1,0 +1,158 @@
+/* --- Variables locales del Dashboard --- */
+$color-card-bg-start: #111a28;
+$color-card-bg-end: #0d2127;
+$color-accent: #20c997; 
+$color-text-light: #a0aec0; 
+
+.dashboard {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* --- BLOQUE: welcome-card --- */
+.welcome-card {
+  background: linear-gradient(135deg, $color-card-bg-start 0%, $color-card-bg-end 100%);
+  border-radius: 24px;
+  padding: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  &__content {
+    max-width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+
+  &__badge {
+    background-color: rgba(32, 201, 151, 0.1);
+    color: $color-accent;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border: 1px solid rgba(32, 201, 151, 0.2);
+  }
+
+  &__title {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  &__description {
+    font-size: 1.1rem;
+    color: $color-text-light;
+    line-height: 1.6;
+    margin: 0;
+
+    strong {
+      color: white;
+      font-weight: 700;
+    }
+  }
+
+  &__button {
+    margin-top: 0.5rem;
+    background-color: $color-accent;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background-color: #17a589;
+    }
+    
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+
+  &__progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 1rem;
+  }
+}
+
+/* --- BLOQUE: progress-circle --- */
+.progress-circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+
+  &__svg {
+    transform: rotate(-90deg); 
+    width: 100%;
+    height: 100%;
+  }
+
+  &__bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05); 
+    stroke-width: 3;
+  }
+
+  &__value {
+    fill: none;
+    stroke: $color-accent;
+    stroke-width: 3;
+    stroke-linecap: round; 
+    transition: stroke-dasharray 1s ease-out;
+  }
+
+  &__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__fraction {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+  }
+
+  &__label {
+    font-size: 0.75rem;
+    color: $color-text-light;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+  }
+}
+
+/* --- Adaptación a pantallas pequeñas (Móviles) --- */
+@media (max-width: 800px) {
+  .welcome-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem;
+    padding: 2rem;
+
+    &__content {
+      max-width: 100%;
+      align-items: center;
+    }
+    
+    &__progress {
+      padding-right: 0;
+    }
+  }
+}
