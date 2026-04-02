@@ -1,31 +1,84 @@
 <div class="dashboard">
-    <section class="welcome-card">
-      
-      <div class="welcome-card__content">
-        <span class="welcome-card__badge">NIVEL AVANZADO</span>
-        <h2 class="welcome-card__title">¡A por todas, {{ userName() }}! 💪</h2>
-        <p class="welcome-card__description">
-          Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
-        </p>
-        <button class="welcome-card__button">
-          👀 Ver sugerencias
+  <section class="welcome-card">
+    <div class="welcome-card__content">
+      <span class="welcome-card__badge">NIVEL {{ currentUser().level }}</span>
+      <h2 class="welcome-card__title">¡A por todas, {{ currentUser().name }}! 💪</h2>
+      <p class="welcome-card__description">
+        Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
+      </p>
+      <button class="welcome-card__button"> Ver sugerencias</button>
+    </div>
+
+    <div class="welcome-card__progress">
+      <div class="progress-circle">
+        <svg viewBox="0 0 36 36" class="progress-circle__svg">
+          <path class="progress-circle__bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          <path class="progress-circle__value" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+        </svg>
+        <div class="progress-circle__text">
+          <span class="progress-circle__fraction">{{ completedDays() }}/{{ totalDays() }}</span>
+          <span class="progress-circle__label">DÍAS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="dashboard__grid">
+    
+    <div class="matches-list">
+      @for (match of suggestedMatches(); track match.id) {
+        <article class="match-card">
+          <div class="match-card__avatar">{{ match.initial }}</div>
+          
+          <div class="match-card__info">
+            @if (match.isTopMatch) {
+              <span class="match-card__badge">TOP MATCH DE HOY</span>
+            }
+            <h3 class="match-card__name">{{ match.name }}</h3>
+            <p class="match-card__desc">Comparte tu horario de tardes en {{ match.gym }}.</p>
+            
+            <div class="match-card__tags">
+              <span class="match-card__tag">{{ match.level }}</span>
+              <span class="match-card__tag match-card__tag--green">{{ match.focus }}</span>
+            </div>
+          </div>
+
+          <button class="match-card__button">Contactar</button>
+        </article>
+      }
+    </div>
+
+    <aside class="shortcuts-card">
+      <div class="shortcuts-card__header">
+        <h3 class="shortcuts-card__title">Tus atajos</h3>
+        <button class="shortcuts-card__edit-btn" (click)="toggleEdit()">
+          {{ isEditingSession() ? 'Guardar' : 'Editar' }}
         </button>
       </div>
-  
-      <div class="welcome-card__progress">
-        <div class="progress-circle">
-          <svg viewBox="0 0 36 36" class="progress-circle__svg">
-            <path class="progress-circle__bg"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <path class="progress-circle__value" stroke-dasharray="75, 100"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-          </svg>
-          <div class="progress-circle__text">
-            <span class="progress-circle__fraction">{{ completedDays() }}/{{ totalDays() }}</span>
-            <span class="progress-circle__label">DÍAS</span>
+      
+      <div class="shortcuts-card__list">
+        <div class="shortcut-item">
+          <div class="shortcut-item__icon-wrapper">
+            <span class="shortcut-item__icon">📅</span>
+          </div>
+          <div class="shortcut-item__content">
+            <span class="shortcut-item__label">SIGUIENTE SESIÓN</span>
+            
+            @if (isEditingSession()) {
+              <input 
+                type="text" 
+                class="shortcut-item__input" 
+                [value]="shortcuts().nextSession"
+                (input)="updateSession($event)"
+              >
+            } @else {
+              <span class="shortcut-item__value">{{ shortcuts().nextSession }}</span>
+            }
+
           </div>
         </div>
       </div>
-  
-    </section>
+    </aside>
+
   </div>
+</div>

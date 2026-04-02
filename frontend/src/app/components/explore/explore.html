@@ -1,0 +1,41 @@
+<div class="explore">
+    <h1 class="explore__title">Encuentra a tu compañero ideal</h1>
+  
+    <div class="explore__filters">
+      @for (filter of filters(); track filter) {
+        <button 
+          class="filter-chip" 
+          [class.filter-chip--active]="activeFilter() === filter"
+          (click)="activeFilter.set(filter)">
+          {{ filter }}
+        </button>
+      }
+    </div>
+  
+    <div class="explore__grid">
+      @for (user of sortedUsers(); track user.id) {
+        <article class="partner-card">
+          
+          <header class="partner-card__header">
+            <div class="partner-card__avatar">{{ user.initial }}</div>
+            <div class="partner-card__title-group">
+              <h2 class="partner-card__name">{{ user.name }}</h2>
+              <span class="partner-card__location"> {{ user.gym }}</span>
+            </div>
+          </header>
+  
+          <div class="partner-card__tags">
+            <span class="tag tag--level">{{ user.level }}</span>
+            <span class="tag tag--focus">{{ user.focus }}</span>
+            <span class="tag tag--time">{{ user.time }}</span>
+          </div>
+  
+          <p class="partner-card__bio">{{ user.bio }}</p>
+  
+          <button class="partner-card__button">
+             Contactar
+          </button>
+        </article>
+      }
+    </div>
+  </div>

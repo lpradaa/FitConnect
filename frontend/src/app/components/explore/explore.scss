@@ -1,0 +1,164 @@
+/* --- Variables --- */
+$color-bg: #ffffff;
+$color-text-main: #111a28;
+$color-text-muted: #6c757d;
+$color-accent: #0f9d58; 
+
+.explore {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  &__title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: $color-text-main;
+    margin-bottom: 1.5rem;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* --- Filtros --- */
+.filter-chip {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  color: $color-text-muted;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $color-text-muted;
+  }
+
+  &--active {
+    background-color: $color-accent;
+    color: white;
+    border-color: $color-accent;
+  }
+}
+
+/* --- Tarjetas de Partners --- */
+.partner-card {
+  background-color: $color-bg;
+  border: 1px solid #f0f2f5;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #d1f4e0;
+    color: #0f9d58;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+
+  &__title-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $color-text-main;
+    margin: 0;
+  }
+
+  &__location {
+    font-size: 0.85rem;
+    color: $color-text-muted;
+    font-weight: 600;
+    margin-top: 0.2rem;
+  }
+
+  &__tags {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  &__bio {
+    font-style: italic;
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    flex-grow: 1; /* Empuja el botón siempre hacia abajo */
+  }
+
+  &__button {
+    background-color: $color-text-main;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+/* --- Etiquetas Específicas --- */
+.tag {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  &--level {
+    background-color: #f1f3f5;
+    color: #495057;
+  }
+
+  &--focus {
+    background-color: #e6fcf5;
+    color: #0ca678;
+  }
+
+  &--time {
+    background-color: #f3f0ff;
+    color: #6741d9;
+  }
+}
