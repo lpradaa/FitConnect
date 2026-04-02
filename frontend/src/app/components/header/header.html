@@ -33,17 +33,14 @@
     <hr class="sidebar__divider" />
   
     <nav class="sidebar__nav">
-      <a href="#" class="sidebar__nav-item sidebar__nav-item--active">
-        <span class="sidebar__nav-icon">🏠</span>
-        Dashboard
+      <a routerLink="/" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active" [routerLinkActiveOptions]="{exact: true}">
+        <span class="sidebar__nav-icon">🏠</span> Dashboard
+      </a>
+      <a routerLink="/explore" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active">
+        <span class="sidebar__nav-icon">🔍</span> Explorar Compañeros
       </a>
       <a href="#" class="sidebar__nav-item">
-        <span class="sidebar__nav-icon">🔍</span>
-        Explorar Compañeros
-      </a>
-      <a href="#" class="sidebar__nav-item">
-        <span class="sidebar__nav-icon">👤</span>
-        Mi Perfil
+        <span class="sidebar__nav-icon">👤</span> Mi Perfil
       </a>
     </nav>
   
