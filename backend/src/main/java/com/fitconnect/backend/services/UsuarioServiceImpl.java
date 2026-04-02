@@ -94,8 +94,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         // 5. Devolvemos el DTO de respuesta seguro
         return new UsuarioResponseDTO(
-                guardado.getId(), guardado.getNombre(), guardado.getEmail(),
-                guardado.getEdad(), guardado.getGenero(), guardado.getPeso()
+                guardado.getId(), 
+                guardado.getNombre(), 
+                guardado.getEmail(),
+                guardado.getEdad(), 
+                guardado.getGenero(), 
+                guardado.getPeso(),
+                guardado.getNivel(),    // Dato nuevo añadido
+                guardado.getObjetivos() // Dato nuevo añadido
         );
     }
 }
