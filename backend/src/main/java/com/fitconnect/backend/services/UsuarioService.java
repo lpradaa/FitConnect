@@ -14,4 +14,5 @@ public interface UsuarioService {
     Optional<Usuario> buscarPorEmail(String email);
     List<Usuario> obtenerTodosLosUsuarios();
     UsuarioResponseDTO actualizarPerfil(String email, UsuarioPerfilDTO dto);
+    List<UsuarioResponseDTO> buscarCompañeros(String email);
 }

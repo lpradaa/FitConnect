@@ -1,5 +1,7 @@
 package com.fitconnect.backend.models;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +42,9 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "gimnasio_id")
     private Gimnasio gimnasio;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Disponibilidad> disponibilidades;
 
     // Constructor vacío obligatorio para que Hibernate funcione
     public Usuario() {}
@@ -82,5 +88,13 @@ public class Usuario {
 
     public void setObjetivos(String objetivos) {
         this.objetivos = objetivos;
+    }
+
+    public List<Disponibilidad> getDisponibilidades() {
+        return disponibilidades;
+    }
+
+    public void setDisponibilidades(List<Disponibilidad> disponibilidades) {
+        this.disponibilidades = disponibilidades;
     }
 }

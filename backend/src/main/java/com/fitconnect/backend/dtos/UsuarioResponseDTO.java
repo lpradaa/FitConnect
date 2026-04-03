@@ -7,6 +7,9 @@ public class UsuarioResponseDTO {
     private Integer edad;
     private String genero;
     private Float peso;
+    private String nivel;
+    private String objetivos;
+    private Long gimnasioId;
 
     // Constructor que convierte la Entidad en DTO fácilmente
     public UsuarioResponseDTO(Long id, String nombre, String email, Integer edad, String genero, Float peso) {
@@ -16,6 +19,18 @@ public class UsuarioResponseDTO {
         this.edad = edad;
         this.genero = genero;
         this.peso = peso;
+    }
+
+    public UsuarioResponseDTO(Long id, String nombre, String email, Integer edad, String genero, Float peso, String nivel, String objetivos, Long gimnasioId) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.edad = edad;
+        this.genero = genero;
+        this.peso = peso;
+        this.nivel = nivel;
+        this.objetivos = objetivos;
+        this.gimnasioId = gimnasioId; // <-- Asignamos
     }
 
     // Getters y Setters
@@ -31,4 +46,10 @@ public class UsuarioResponseDTO {
     public void setGenero(String genero) { this.genero = genero; }
     public Float getPeso() { return peso; }
     public void setPeso(Float peso) { this.peso = peso; }
+    public String getNivel() { return nivel; }
+    public void setNivel(String nivel) { this.nivel = nivel; }
+    public String getObjetivos() { return objetivos; }
+    public void setObjetivos(String objetivos) { this.objetivos = objetivos; }
+    public Long getGimnasioId() { return gimnasioId; }
+    public void setGimnasioId(Long gimnasioId) { this.gimnasioId = gimnasioId; }
 }
