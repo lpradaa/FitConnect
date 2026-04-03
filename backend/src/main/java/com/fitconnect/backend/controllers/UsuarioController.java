@@ -4,6 +4,8 @@ import com.fitconnect.backend.dtos.UsuarioPerfilDTO;
 import com.fitconnect.backend.dtos.UsuarioRegistroDTO;
 import com.fitconnect.backend.dtos.UsuarioResponseDTO;
 import com.fitconnect.backend.services.UsuarioService;
+
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,30 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error inesperado al actualizar el perfil.");
+        }
+    }
+
+    /**
+     * Endpoint para Buscar Compañeros (Matches)
+     * GET http://localhost:8080/api/usuarios/matches
+     */
+    @GetMapping("/matches")
+    public ResponseEntity<?> obtenerMatches() {
+        try {
+            // 1. Sacamos el email del usuario logueado (ej. Carlos) desde su Token
+            String emailLogueado = SecurityContextHolder.getContext().getAuthentication().getName();
+            
+            // 2. Llamamos al servicio para buscar sus matches
+            List<UsuarioResponseDTO> posiblesCompañeros = usuarioService.buscarCompañeros(emailLogueado);
+            
+            // 3. Devolvemos la lista con un 200 OK
+            return ResponseEntity.ok(posiblesCompañeros);
+            
+        } catch (RuntimeException e) {
+            // Si no tiene gimnasio u ocurre un error, devolvemos un 400 Bad Request
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error al buscar compañeros.");
         }
     }
 

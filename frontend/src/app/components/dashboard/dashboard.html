@@ -1,0 +1,31 @@
+<div class="dashboard">
+    <section class="welcome-card">
+      
+      <div class="welcome-card__content">
+        <span class="welcome-card__badge">NIVEL AVANZADO</span>
+        <h2 class="welcome-card__title">¡A por todas, {{ userName() }}! 💪</h2>
+        <p class="welcome-card__description">
+          Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
+        </p>
+        <button class="welcome-card__button">
+          👀 Ver sugerencias
+        </button>
+      </div>
+  
+      <div class="welcome-card__progress">
+        <div class="progress-circle">
+          <svg viewBox="0 0 36 36" class="progress-circle__svg">
+            <path class="progress-circle__bg"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="progress-circle__value" stroke-dasharray="75, 100"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="progress-circle__text">
+            <span class="progress-circle__fraction">{{ completedDays() }}/{{ totalDays() }}</span>
+            <span class="progress-circle__label">DÍAS</span>
+          </div>
+        </div>
+      </div>
+  
+    </section>
+  </div>

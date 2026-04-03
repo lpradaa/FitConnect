@@ -1,0 +1,189 @@
+/* --- Variables de color --- */
+$color-bg-light: #ffffff;
+$color-bg-hover: #f8f9fa;
+$color-bg-active: #f0fbf4;
+$color-bg-avatar: #d1f4e0;
+$color-text-main: #1a1a1a;
+$color-text-secondary: #4a4a4a;
+$color-text-email: #28a745;
+$color-text-avatar: #1a5632;
+$color-border: #f0f0f0;
+
+/* --- BLOQUE: header --- */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: $color-bg-light;
+  border-bottom: 1px solid $color-border;
+  height: 60px;
+  box-sizing: border-box;
+
+  &__button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    color: $color-text-main;
+  }
+
+  &__logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0 1rem;
+    color: $color-text-main;
+  }
+}
+
+/* --- BLOQUE: backdrop --- */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &--show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* --- BLOQUE: sidebar --- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  max-width: 85vw;
+  height: 100vh;
+  background-color: $color-bg-light;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+  }
+
+  &__close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  &__user-profile {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    gap: 1rem;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: $color-bg-avatar;
+    color: $color-text-avatar;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__user-name {
+    font-weight: 700;
+    color: $color-text-main;
+    font-size: 1.1rem;
+  }
+
+  &__user-email {
+    font-size: 0.85rem;
+    color: $color-text-email;
+    font-weight: 600;
+  }
+
+  &__divider {
+    border: none;
+    border-top: 1px solid $color-border;
+    margin: 0;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    flex: 1;
+    gap: 0.5rem;
+  }
+
+  &__nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: $color-text-secondary;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $color-bg-hover;
+    }
+
+    &--active {
+      background-color: $color-bg-active;
+      color: $color-text-main;
+    }
+  }
+
+  &__nav-icon {
+    margin-right: 1rem;
+    font-size: 1.2rem;
+  }
+
+  &__footer {
+    padding: 1.5rem;
+  }
+
+  &__auth-button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    background-color: $color-bg-hover;
+    color: $color-text-main;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #e2e6ea;
+    }
+  }
+}

@@ -1,0 +1,192 @@
+@charset "UTF-8";
+/* --- Variables locales del Dashboard --- */
+.dashboard {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* --- BLOQUE: welcome-card --- */
+.welcome-card {
+  background: linear-gradient(135deg, #111a28 0%, #0d2127 100%);
+  border-radius: 24px;
+  padding: 3rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: white;
+  -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.welcome-card__content {
+  max-width: 65%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 1.2rem;
+}
+
+.welcome-card__badge {
+  background-color: rgba(32, 201, 151, 0.1);
+  color: #20c997;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  border: 1px solid rgba(32, 201, 151, 0.2);
+}
+
+.welcome-card__title {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.welcome-card__description {
+  font-size: 1.1rem;
+  color: #a0aec0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.welcome-card__description strong {
+  color: white;
+  font-weight: 700;
+}
+
+.welcome-card__button {
+  margin-top: 0.5rem;
+  background-color: #20c997;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-transition: background-color 0.2s ease, -webkit-transform 0.1s ease;
+  transition: background-color 0.2s ease, -webkit-transform 0.1s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease, -webkit-transform 0.1s ease;
+}
+
+.welcome-card__button:hover {
+  background-color: #17a589;
+}
+
+.welcome-card__button:active {
+  -webkit-transform: scale(0.97);
+          transform: scale(0.97);
+}
+
+.welcome-card__progress {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-right: 1rem;
+}
+
+/* --- BLOQUE: progress-circle --- */
+.progress-circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.progress-circle__svg {
+  -webkit-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.progress-circle__bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 3;
+}
+
+.progress-circle__value {
+  fill: none;
+  stroke: #20c997;
+  stroke-width: 3;
+  stroke-linecap: round;
+  -webkit-transition: stroke-dasharray 1s ease-out;
+  transition: stroke-dasharray 1s ease-out;
+}
+
+.progress-circle__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.progress-circle__fraction {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+}
+
+.progress-circle__label {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+/* --- Adaptación a pantallas pequeñas (Móviles) --- */
+@media (max-width: 800px) {
+  .welcome-card {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    text-align: center;
+    gap: 3rem;
+    padding: 2rem;
+  }
+  .welcome-card__content {
+    max-width: 100%;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  .welcome-card__progress {
+    padding-right: 0;
+  }
+}
+/*# sourceMappingURL=dashboard.css.map */

@@ -31,9 +31,15 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
+                // 1. Lo que puede ver todo el mundo
                 .requestMatchers("/api/usuarios/registro", "/api/auth/login").permitAll() 
+                
+                // 2. Aseguramos que la ruta de matches requiere estar logueado
+                .requestMatchers("/api/usuarios/matches").authenticated()
+                
+                // 3. El resto también requiere estar logueado
                 .anyRequest().authenticated() 
-            )
+)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             // ¡AQUÍ COLOCAMOS AL PORTERO!
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); 
