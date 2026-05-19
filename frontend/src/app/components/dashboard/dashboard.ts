@@ -1,5 +1,6 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // 👈 1. Importamos el Router para poder viajar de pantalla
 import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
@@ -11,6 +12,7 @@ import { UsuarioService } from '../../services/usuario.service';
 })
 export class DashboardComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
+  private router = inject(Router); // 👈 2. Inyectamos el enrutador
 
   // 🔄 Signals dinámicos para la interfaz
   userName = signal(localStorage.getItem('usuario_nombre') || 'Usuario');
@@ -57,5 +59,10 @@ export class DashboardComponent implements OnInit {
         alert('❌ No se pudo enviar: ' + (err.error || 'Error desconocido'));
       }
     });
+  }
+
+  // 👈 3. Función conectada al nuevo botón "Chatear"
+  irAlChat(usuarioId: number): void {
+    this.router.navigate(['/chat', usuarioId]);
   }
 }
