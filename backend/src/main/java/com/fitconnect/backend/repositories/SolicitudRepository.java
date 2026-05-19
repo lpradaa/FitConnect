@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     
-    // Busca si ya existe una solicitud previa entre dos usuarios (para evitar duplicados/spam)
-    Optional<Solicitud> findByEmisorIdAndReceptorId(Long emisorId, Long receptorId);
+    // 🔥 CORREGIDO: findFirstBy... evita el error 500 si hay solicitudes duplicadas por accidente
+    Optional<Solicitud> findFirstByEmisorIdAndReceptorId(Long emisorId, Long receptorId);
 
     // Busca todas las solicitudes que ha recibido un usuario y que están en un estado concreto (ej: "PENDIENTE")
     List<Solicitud> findByReceptorIdAndEstado(Long receptorId, String estado);
@@ -21,7 +21,7 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     // Busca todas las solicitudes aceptadas de un usuario (para saber quiénes son sus "Matches")
     List<Solicitud> findByEmisorIdAndEstadoOrReceptorIdAndEstado(Long emisorId, String estado1, Long receptorId, String estado2);
 
-    // Añade esto en tu SolicitudRepository.java
+    // Búsqueda de solicitudes aceptadas por usuario
     @Query("SELECT s FROM Solicitud s WHERE (s.emisor.id = :usuarioId OR s.receptor.id = :usuarioId) AND s.estado = 'ACEPTADA'")
     List<Solicitud> findAceptadasPorUsuario(@Param("usuarioId") Long usuarioId);
 }

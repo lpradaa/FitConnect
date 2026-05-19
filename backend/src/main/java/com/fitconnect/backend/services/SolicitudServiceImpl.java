@@ -45,14 +45,13 @@ public class SolicitudServiceImpl implements SolicitudService {
         Usuario receptor = usuarioRepository.findById(receptorId)
                 .orElseThrow(() -> new IllegalArgumentException("Receptor no encontrado"));
 
-        // Regla 1: No puedes enviarte una solicitud a ti mismo
         if (emisor.getId().equals(receptor.getId())) {
             throw new IllegalArgumentException("No puedes enviarte una solicitud a ti mismo.");
         }
 
-        // Regla 2: Evitar spam verificando si ya hay una solicitud previa en cualquier dirección
-        Optional<Solicitud> previaIda = solicitudRepository.findByEmisorIdAndReceptorId(emisor.getId(), receptor.getId());
-        Optional<Solicitud> previaVuelta = solicitudRepository.findByEmisorIdAndReceptorId(receptor.getId(), emisor.getId());
+        // 🔥 SOLUCIÓN: Usamos findFirstBy para evitar errores si en el futuro hay basura en la BD
+        Optional<Solicitud> previaIda = solicitudRepository.findFirstByEmisorIdAndReceptorId(emisor.getId(), receptor.getId());
+        Optional<Solicitud> previaVuelta = solicitudRepository.findFirstByEmisorIdAndReceptorId(receptor.getId(), emisor.getId());
         
         if (previaIda.isPresent() || previaVuelta.isPresent()) {
             throw new IllegalArgumentException("Ya existe una solicitud entre estos usuarios.");
@@ -61,7 +60,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         Solicitud nueva = new Solicitud();
         nueva.setEmisor(emisor);
         nueva.setReceptor(receptor);
-        nueva.setEstado("PENDIENTE"); // Estado inicial por defecto
+        nueva.setEstado("PENDIENTE"); 
 
         Solicitud guardada = solicitudRepository.save(nueva);
         return mapearADTO(guardada);
@@ -75,7 +74,6 @@ public class SolicitudServiceImpl implements SolicitudService {
         Solicitud solicitud = solicitudRepository.findById(solicitudId)
                 .orElseThrow(() -> new IllegalArgumentException("Solicitud no encontrada"));
 
-        // Regla 3: Solo el RECEPTOR original puede aceptar o rechazar la solicitud
         if (!solicitud.getReceptor().getId().equals(usuarioLogueado.getId())) {
             throw new SecurityException("No tienes permiso para responder a esta solicitud.");
         }
@@ -99,7 +97,6 @@ public class SolicitudServiceImpl implements SolicitudService {
         return pendientes.stream().map(this::mapearADTO).collect(Collectors.toList());
     }
 
-    // Método de utilidad para no repetir código
     private SolicitudDTO mapearADTO(Solicitud s) {
         return new SolicitudDTO(
                 s.getId(),
@@ -113,14 +110,11 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     @Override
     public List<SolicitudDTO> obtenerAceptadas(String email) {
-        // 1. Buscamos al usuario logueado en la base de datos por su email para sacar su ID
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con email: " + email));
 
-        // 2. Lanzamos la query que busca todas las solicitudes 'ACEPTADA' donde participe este ID
         List<Solicitud> solicitudesAceptadas = solicitudRepository.findAceptadasPorUsuario(usuario.getId());
 
-        // 3. Convertimos la lista de Entidades a SolicitudDTO (el traductor seguro para el Frontend)
         return solicitudesAceptadas.stream()
                 .map(s -> new SolicitudDTO(
                         s.getId(),
@@ -132,5 +126,4 @@ public class SolicitudServiceImpl implements SolicitudService {
                 ))
                 .collect(Collectors.toList());
     }
-    
 }
