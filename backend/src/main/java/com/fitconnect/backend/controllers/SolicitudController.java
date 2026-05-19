@@ -67,4 +67,15 @@ public class SolicitudController {
         String email = obtenerEmailAutenticado();
         return ResponseEntity.ok(solicitudService.obtenerPendientes(email));
     }
+
+    /**
+     * 4. VER MIS COMPAÑEROS (SOLICITUDES ACEPTADAS)
+     * GET http://localhost:8080/api/solicitudes/aceptadas
+     */
+    @GetMapping("/aceptadas")
+    public ResponseEntity<List<SolicitudDTO>> obtenerAceptadas() {
+        String email = obtenerEmailAutenticado();
+        return ResponseEntity.ok(solicitudService.obtenerAceptadas(email));
+    }
+
 }

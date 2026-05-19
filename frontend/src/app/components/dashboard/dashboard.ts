@@ -9,7 +9,7 @@ import { UsuarioService } from '../../services/usuario.service';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class Dashboard implements OnInit {
+export class DashboardComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
 
   // 🔄 Signals dinámicos para la interfaz
@@ -32,12 +32,12 @@ export class Dashboard implements OnInit {
         console.log('Backend conectado con éxito. Matches:', data);
       },
       error: (err) => {
-        console.error('Error al morder Spring Boot:', err);
+        console.error('Error al conectar con Spring Boot:', err);
       }
     });
   }
 
-  // 🔥 Función conectada al botón "Enviar Mensaje"
+  // 🔥 Función conectada al botón "Enviar Solicitud"
   conectarConUsuario(usuarioId: number): void {
     console.log(`Enviando solicitud de conexión al usuario ID: ${usuarioId}...`);
 
@@ -54,7 +54,6 @@ export class Dashboard implements OnInit {
       },
       error: (err) => {
         console.error('Error del backend:', err);
-        // Mostramos el mensaje de error que devuelve tu Spring Boot (ej: "Ya enviaste una solicitud")
         alert('❌ No se pudo enviar: ' + (err.error || 'Error desconocido'));
       }
     });

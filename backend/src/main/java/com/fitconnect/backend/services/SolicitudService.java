@@ -10,4 +10,5 @@ public interface SolicitudService {
     SolicitudDTO enviarSolicitud(String emailEmisor, Long receptorId);
     SolicitudDTO responderSolicitud(String emailReceptor, Long solicitudId, String nuevoEstado);
     List<SolicitudDTO> obtenerPendientes(String emailReceptor);
+    List<SolicitudDTO> obtenerAceptadas(String email);
 }
