@@ -1,4 +1,5 @@
 package com.fitconnect.backend.models; 
+
 import jakarta.persistence.*;
 import java.time.LocalTime;
 
@@ -19,10 +20,16 @@ public class Disponibilidad {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
-
-    // Relacionaremos esto con el Usuario más adelante
     
     public Disponibilidad() {}
+
+    // 🔥 NUEVO: Constructor rápido para crear disponibilidades desde el servicio
+    public Disponibilidad(String diaSemana, LocalTime horaInicio, LocalTime horaFin, Usuario usuario) {
+        this.diaSemana = diaSemana;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.usuario = usuario;
+    }
 
     // Getters y Setters
     public Long getId() { return id; }

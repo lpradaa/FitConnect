@@ -6,9 +6,10 @@
       <p class="welcome-card__description">
         Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
       </p>
-      <button class="welcome-card__button">
-        👀 Ver sugerencias
-      </button>
+      <div style="display: flex; gap: 10px;">
+        <button class="welcome-card__button">👀 Ver sugerencias</button>
+        <button class="welcome-card__button welcome-card__button--outline" (click)="abrirModal()">⚙️ Editar Mi Perfil</button>
+      </div>
     </div>
 
     <div class="welcome-card__progress">
@@ -32,7 +33,7 @@
       <div class="match-card" *ngFor="let user of usuariosCompatibles">
         
         <div class="match-card__avatar">
-          <span>{{ user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U' }}</span>
+          <span>{{ user.avatar ? user.avatar : (user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U') }}</span>
         </div>
 
         <div class="match-card__body">
@@ -49,27 +50,99 @@
         </div>
 
         <div class="match-card__actions" style="display: flex; gap: 10px;">
-          
           <button *ngIf="!user.yaConectado"
             class="match-card__btn" 
             (click)="conectarConUsuario(user.id)"
             [disabled]="user.solicitudPendiente"
-            [style.opacity]="user.solicitudPendiente ? 0.5 : 1"
-          >
+            [style.opacity]="user.solicitudPendiente ? 0.5 : 1">
             {{ user.solicitudPendiente ? '⏳ Pendiente' : '👋 Conectar' }}
           </button>
           
           <button *ngIf="user.yaConectado"
             class="match-card__btn" 
             style="background-color: #2ecc71; border-color: #2ecc71;" 
-            (click)="irAlChat(user.id)"
-          >
+            (click)="irAlChat(user.id)">
             💬 Chatear
           </button>
-
         </div>
-
       </div>
     </div>
   </section>
+</div>
+
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>⚙️ Editar Mi Perfil</h2>
+      <button class="close-btn" (click)="cerrarModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-section">
+        <h3>1. Elige tu Avatar</h3>
+        <div class="avatar-preview">Tu avatar actual: <span>{{ perfilForm.avatar }}</span></div>
+        <div class="emoji-grid">
+          <button *ngFor="let emoji of emojisDisponibles" 
+                  class="emoji-btn" 
+                  [class.active]="perfilForm.avatar === emoji"
+                  (click)="seleccionarAvatar(emoji)">
+            {{ emoji }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>2. Datos Físicos y Objetivos</h3>
+        <div class="form-grid">
+          <div class="input-group">
+            <label>Nivel</label>
+            <select [(ngModel)]="perfilForm.nivel">
+              <option value="Principiante">Principiante</option>
+              <option value="Intermedio">Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Objetivo Principal</label>
+            <select [(ngModel)]="perfilForm.objetivos">
+              <option value="Hipertrofia">Hipertrofia</option>
+              <option value="Fuerza">Fuerza</option>
+              <option value="Pérdida de peso">Pérdida de peso</option>
+              <option value="Resistencia">Resistencia</option>
+            </select>
+          </div>
+          <div class="input-group"><label>Edad</label><input type="number" [(ngModel)]="perfilForm.edad"></div>
+          <div class="input-group"><label>Peso (Kg)</label><input type="number" [(ngModel)]="perfilForm.peso"></div>
+          <div class="input-group"><label>Género</label><input type="text" [(ngModel)]="perfilForm.genero"></div>
+          <div class="input-group"><label>ID Gimnasio</label><input type="number" [(ngModel)]="perfilForm.gimnasioId"></div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>3. Horarios de Entrenamiento</h3>
+          <button class="add-btn" (click)="agregarHorario()">+ Añadir día</button>
+        </div>
+        
+        <div class="horario-row" *ngFor="let h of perfilForm.horarios; let i = index">
+          <select [(ngModel)]="h.diaSemana">
+            <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
+          </select>
+          <input type="time" [(ngModel)]="h.horaInicio">
+          <span>a</span>
+          <input type="time" [(ngModel)]="h.horaFin">
+          <button class="delete-btn" (click)="eliminarHorario(i)">🗑️</button>
+        </div>
+        <p *ngIf="perfilForm.horarios.length === 0" style="color: #64748b; font-size: 14px;">No tienes horarios añadidos. ¡Añade uno para encontrar matches!</p>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn-save" (click)="guardarPerfil()">Guardar Cambios</button>
+    </div>
+
+  </div>
 </div>

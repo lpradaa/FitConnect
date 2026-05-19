@@ -91,6 +91,16 @@
     }
   }
 
+  /* NUEVO: Botón transparente secundario */
+  &__button--outline {
+    background-color: transparent;
+    border: 2px solid white;
+    &:hover {
+      background-color: white;
+      color: $text-main;
+    }
+  }
+
   &__progress {
     display: flex;
     justify-content: center;
@@ -275,4 +285,100 @@
     background-color: rgba(#ed8936, 0.1);
     color: #ed8936;
   }
+}
+
+/* =========================================
+   NUEVO: ESTILOS DEL MODAL DE PERFIL
+   ========================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  border-radius: $radius-lg;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalIn 0.3s ease-out forwards;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid $border;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 { margin: 0; font-size: $text-xl; color: $text-main; }
+  .close-btn { 
+    background: none; border: none; font-size: $text-lg; cursor: pointer; color: $text-muted;
+    &:hover { color: $text-main; }
+  }
+}
+
+.modal-body {
+  padding: $space-lg;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xl;
+}
+
+.form-section {
+  h3 { margin: 0 0 $space-sm 0; font-size: $text-base; color: $text-main; border-bottom: 2px solid $border; padding-bottom: 5px;}
+}
+
+/* Emoji Picker */
+.avatar-preview { font-size: 14px; margin-bottom: 10px; span { font-size: 24px; vertical-align: middle;} }
+.emoji-grid {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  .emoji-btn {
+    font-size: 24px; padding: 10px; background: $bg-card; border: 2px solid transparent; border-radius: $radius-md; cursor: pointer; transition: 0.2s;
+    &:hover { transform: scale(1.1); background: #f1f5f9; }
+    &.active { border-color: $accent; background: rgba($accent, 0.1); }
+  }
+}
+
+/* Formularios Grid */
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: $space-md;
+}
+.input-group {
+  display: flex; flex-direction: column; gap: 5px;
+  label { font-size: $text-sm; font-weight: $font-semibold; color: $text-main; }
+  input, select { 
+    padding: 10px; border: 1px solid $border; border-radius: $radius-sm; outline: none; font-family: inherit;
+    &:focus { border-color: $accent; box-shadow: 0 0 0 2px rgba($accent, 0.2); }
+  }
+}
+
+/* Horarios */
+.add-btn { background: #e0f2fe; color: #0284c7; border: none; padding: 5px 10px; border-radius: $radius-sm; cursor: pointer; font-weight: bold;}
+.horario-row {
+  display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
+  select, input { padding: 8px; border: 1px solid $border; border-radius: $radius-sm; }
+  .delete-btn { background: #fee2e2; border: none; border-radius: $radius-sm; cursor: pointer; padding: 8px; }
+}
+
+.modal-footer {
+  padding: $space-md $space-lg; border-top: 1px solid $border; display: flex; justify-content: flex-end; gap: $space-md; background: #f8fafc; border-radius: 0 0 $radius-lg $radius-lg;
+  .btn-cancel { padding: 10px 20px; background: transparent; border: 1px solid $border; border-radius: $radius-md; cursor: pointer; font-weight: bold; color: $text-muted;}
+  .btn-save { padding: 10px 20px; background: $accent; color: white; border: none; border-radius: $radius-md; cursor: pointer; font-weight: bold; }
 }
