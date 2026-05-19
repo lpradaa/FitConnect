@@ -1,0 +1,15 @@
+/* --- Media Queries (Mobile First) --- */
+$screen-md: 768px; /* Tablets */
+$screen-lg: 1024px; /* Escritorio */
+
+@mixin tablet {
+  @media (min-width: #{$screen-md}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$screen-lg}) {
+    @content;
+  }
+}

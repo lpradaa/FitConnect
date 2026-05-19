@@ -1,68 +1,64 @@
-/* --- Variables --- */
-$color-bg: #ffffff;
-$color-text-main: #111a28;
-$color-text-muted: #6c757d;
-$color-accent: #0f9d58; 
+@import '../../../scss/index';
 
 .explore {
-  padding: 2rem;
+  padding: $space-lg;
   max-width: 1200px;
   margin: 0 auto;
 
   &__title {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: $color-text-main;
-    margin-bottom: 1.5rem;
+    font-size: $text-4xl;
+    font-weight: $font-extrabold;
+    color: $text-main;
+    margin-bottom: $space-md;
   }
 
   &__filters {
     display: flex;
-    gap: 0.8rem;
-    margin-bottom: 2.5rem;
+    gap: $space-sm;
+    margin-bottom: $space-lg;
     flex-wrap: wrap;
   }
 
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    gap: $space-md;
   }
 }
 
 /* --- Filtros --- */
 .filter-chip {
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  color: $color-text-muted;
-  padding: 0.6rem 1.2rem;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  background-color: $bg-card;
+  border: 1px solid $border;
+  color: $text-muted;
+  padding: $space-xs $space-sm;
+  border-radius: $radius-full;
+  font-weight: $font-bold;
+  font-size: $text-sm;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: $color-text-muted;
+    border-color: $text-muted;
   }
 
   &--active {
-    background-color: $color-accent;
+    background-color: $accent;
     color: white;
-    border-color: $color-accent;
+    border-color: $accent;
   }
 }
 
 /* --- Tarjetas de Partners --- */
 .partner-card {
-  background-color: $color-bg;
-  border: 1px solid #f0f2f5;
-  border-radius: 24px;
-  padding: 2rem;
+  background-color: $bg-card;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $space-lg;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: $space-md;
   transition: transform 0.2s ease;
 
   &:hover {
@@ -72,20 +68,20 @@ $color-accent: #0f9d58;
   &__header {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: $space-sm;
   }
 
   &__avatar {
     width: 60px;
     height: 60px;
-    border-radius: 50%;
-    background-color: #d1f4e0;
-    color: #0f9d58;
+    border-radius: $radius-full;
+    background-color: rgba($accent, 0.15); 
+    color: $accent;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.8rem;
-    font-weight: 800;
+    font-size: $text-3xl;
+    font-weight: $font-extrabold;
   }
 
   &__title-group {
@@ -94,71 +90,75 @@ $color-accent: #0f9d58;
   }
 
   &__name {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: $color-text-main;
+    font-size: $text-xl;
+    font-weight: $font-extrabold;
+    color: $text-main;
     margin: 0;
   }
 
   &__location {
-    font-size: 0.85rem;
-    color: $color-text-muted;
-    font-weight: 600;
-    margin-top: 0.2rem;
+    font-size: $text-sm;
+    color: $text-muted;
+    font-weight: $font-semibold;
+    margin-top: 4px;
   }
 
   &__tags {
     display: flex;
-    gap: 0.6rem;
+    gap: 10px; 
     flex-wrap: wrap;
   }
 
   &__bio {
     font-style: italic;
-    color: #4a5568;
-    font-size: 0.95rem;
+    color: $text-muted;
+    font-size: $text-base;
     line-height: 1.5;
     margin: 0;
     flex-grow: 1; /* Empuja el botón siempre hacia abajo */
   }
 
   &__button {
-    background-color: $color-text-main;
+    background-color: $text-main;
     color: white;
     border: none;
-    padding: 1rem;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
+    padding: $space-sm;
+    border-radius: $radius-md;
+    font-weight: $font-bold;
+    font-size: $text-base;
     cursor: pointer;
-    margin-top: 0.5rem;
-    transition: opacity 0.2s ease;
+    margin-top: $space-xs;
+    transition: opacity 0.2s ease, transform 0.1s ease;
 
     &:hover {
       opacity: 0.9;
+    }
+
+    &:active {
+      transform: scale(0.98);
     }
   }
 }
 
 /* --- Etiquetas Específicas --- */
 .tag {
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding: 6px $space-sm;
+  border-radius: $radius-sm;
+  font-size: $text-xs;
+  font-weight: $font-bold;
 
   &--level {
-    background-color: #f1f3f5;
-    color: #495057;
+    background-color: $input-bg;
+    color: $text-muted;
   }
 
   &--focus {
-    background-color: #e6fcf5;
-    color: #0ca678;
+    background-color: rgba($accent, 0.1);
+    color: $accent;
   }
 
   &--time {
-    background-color: #f3f0ff;
+    background-color: rgba(#6741d9, 0.1);
     color: #6741d9;
   }
 }
