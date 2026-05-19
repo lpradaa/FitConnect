@@ -1,5 +1,6 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // 👈 1. Importamos el Router para poder viajar de pantalla
 import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
@@ -11,6 +12,7 @@ import { UsuarioService } from '../../services/usuario.service';
 })
 export class DashboardComponent implements OnInit {
   private usuarioService = inject(UsuarioService);
+  private router = inject(Router); // 👈 2. Inyectamos el enrutador
 
   // 🔄 Signals dinámicos para la interfaz
   userName = signal(localStorage.getItem('usuario_nombre') || 'Usuario');
@@ -37,25 +39,23 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // 🔥 Función conectada al botón "Enviar Solicitud"
+ // 🔥 Función conectada al botón "Enviar Solicitud"
   conectarConUsuario(usuarioId: number): void {
-    console.log(`Enviando solicitud de conexión al usuario ID: ${usuarioId}...`);
-
-    this.usuarioService.enviarSolicitudConexion(usuarioId).subscribe({
-      next: (respuesta) => {
-        console.log('¡Éxito!', respuesta);
-        alert('✅ ¡Solicitud enviada correctamente! Esperando a que el usuario acepte.');
-        
-        // Efecto visual: Quitamos a ese usuario de la lista visualmente para no repetir solicitud
-        this.usuariosCompatibles = this.usuariosCompatibles.filter(u => u.id !== usuarioId);
-        
-        // Actualizamos el contador del banner
-        this.newProfiles.set(this.usuariosCompatibles.length);
-      },
-      error: (err) => {
-        console.error('Error del backend:', err);
-        alert('❌ No se pudo enviar: ' + (err.error || 'Error desconocido'));
+  this.usuarioService.enviarSolicitudConexion(usuarioId).subscribe({
+    next: () => {
+      alert('✅ Solicitud enviada');
+      // En lugar de filtrar (borrar), buscamos al usuario y marcamos su estado
+      const usuario = this.usuariosCompatibles.find(u => u.id === usuarioId);
+      if (usuario) {
+        usuario.solicitudPendiente = true; // El HTML detectará esto y bloqueará el botón automáticamente
       }
-    });
+    },
+    error: (err) => console.error(err)
+  });
+}
+
+  // 👈 3. Función conectada al nuevo botón "Chatear"
+  irAlChat(usuarioId: number): void {
+    this.router.navigate(['/chat', usuarioId]);
   }
 }

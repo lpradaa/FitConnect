@@ -48,10 +48,25 @@
           </p>
         </div>
 
-        <div class="match-card__actions">
-          <button class="match-card__btn" (click)="conectarConUsuario(user.id)">
-            💬 Enviar Mensaje
+        <div class="match-card__actions" style="display: flex; gap: 10px;">
+          
+          <button 
+            class="match-card__btn" 
+            (click)="conectarConUsuario(user.id)"
+            [disabled]="user.yaConectado || user.solicitudPendiente"
+            [style.opacity]="(user.yaConectado || user.solicitudPendiente) ? 0.5 : 1"
+          >
+            {{ (user.yaConectado || user.solicitudPendiente) ? '⏳ Pendiente/Conectado' : '👋 Conectar' }}
           </button>
+          
+          <button 
+            class="match-card__btn" 
+            style="background-color: #2ecc71; border-color: #2ecc71;" 
+            (click)="irAlChat(user.id)"
+          >
+            💬 Chatear
+          </button>
+
         </div>
 
       </div>

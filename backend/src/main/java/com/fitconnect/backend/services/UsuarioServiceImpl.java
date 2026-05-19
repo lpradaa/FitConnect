@@ -4,8 +4,10 @@ import com.fitconnect.backend.dtos.UsuarioPerfilDTO;
 import com.fitconnect.backend.dtos.UsuarioRegistroDTO;
 import com.fitconnect.backend.dtos.UsuarioResponseDTO;
 import com.fitconnect.backend.models.Gimnasio;
+import com.fitconnect.backend.models.Solicitud;
 import com.fitconnect.backend.models.Usuario;
 import com.fitconnect.backend.repositories.GimnasioRepository;
+import com.fitconnect.backend.repositories.SolicitudRepository;
 import com.fitconnect.backend.repositories.UsuarioRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,13 +21,15 @@ import java.util.stream.Collectors;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder; // Inyectamos Bcrypt
+    private final PasswordEncoder passwordEncoder;
     private final GimnasioRepository gimnasioRepository;
+    private final SolicitudRepository solicitudRepository;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GimnasioRepository gimnasioRepository ) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GimnasioRepository gimnasioRepository, SolicitudRepository solicitudRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.gimnasioRepository = gimnasioRepository;
+        this.solicitudRepository = solicitudRepository;
     }
 
     @Override
@@ -109,30 +113,23 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<UsuarioResponseDTO> buscarCompañeros(String email) {
-        // 1. Buscamos quién es el usuario que está haciendo la petición
-        Usuario miUsuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-                
-        // 2. Validamos que tenga un gimnasio (si no, no puede buscar)
-        if (miUsuario.getGimnasio() == null) {
-            throw new RuntimeException("Debes tener un gimnasio asignado para buscar compañeros.");
-        }
+        Usuario miUsuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        List<Usuario> matches = usuarioRepository.buscarMatches(miUsuario.getGimnasio().getId(), miUsuario.getId(), miUsuario.getNivel());
 
-        // 3. Ejecutamos la super-consulta del repositorio
-        List<Usuario> matches = usuarioRepository.buscarMatches(
-                miUsuario.getGimnasio().getId(), 
-                miUsuario.getId(), 
-                miUsuario.getNivel()
-        );
-
-        // 4. Convertimos la lista de Usuarios a DTOs seguros
-        return matches.stream()
-                .map(u -> new UsuarioResponseDTO(
-                        u.getId(), u.getNombre(), u.getEmail(), 
-                        u.getEdad(), u.getGenero(), u.getPeso(), 
-                        u.getNivel(), u.getObjetivos(), 
-                        u.getGimnasio() != null ? u.getGimnasio().getId() : null
-                ))
-                .collect(Collectors.toList());
+        return matches.stream().map(u -> {
+            UsuarioResponseDTO dto = new UsuarioResponseDTO(u.getId(), u.getNombre(), u.getEmail(), u.getEdad(), u.getGenero(), u.getPeso(), u.getNivel(), u.getObjetivos(), u.getGimnasio() != null ? u.getGimnasio().getId() : null);
+            
+            // Lógica de conexión
+            Optional<Solicitud> ida = solicitudRepository.findByEmisorIdAndReceptorId(miUsuario.getId(), u.getId());
+            Optional<Solicitud> vuelta = solicitudRepository.findByEmisorIdAndReceptorId(u.getId(), miUsuario.getId());
+            Solicitud sol = ida.orElse(vuelta.orElse(null));
+            
+            if (sol != null) {
+                dto.setYaConectado("ACEPTADA".equals(sol.getEstado()));
+                dto.setSolicitudPendiente("PENDIENTE".equals(sol.getEstado()));
+            }
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
