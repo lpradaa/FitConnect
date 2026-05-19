@@ -18,9 +18,15 @@ export class AuthService {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
           
-          // 👇 ¡AÑADE ESTA LÍNEA AQUÍ PARA GUARDAR EL NOMBRE DEL USUARIO! 👇
           if (response.nombre) {
             localStorage.setItem('usuario_nombre', response.nombre);
+          }
+
+          // 👇 ESTA ES LA PIEZA QUE FALTABA DEL PUZZLE 👇
+          // Guardamos el ID del usuario. Comprobamos si tu backend lo llama "id" o "usuarioId"
+          const userId = response.id || response.usuarioId; 
+          if (userId) {
+            localStorage.setItem('userId', userId.toString());
           }
 
           this.currentUserToken.set(response.token);
@@ -31,6 +37,8 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('usuario_nombre');
+    localStorage.removeItem('userId'); // 👈 Limpiamos el ID al salir
     this.currentUserToken.set(null);
   }
 

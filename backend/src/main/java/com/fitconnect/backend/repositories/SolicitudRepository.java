@@ -2,6 +2,8 @@ package com.fitconnect.backend.repositories;
 
 import com.fitconnect.backend.models.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +20,8 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     
     // Busca todas las solicitudes aceptadas de un usuario (para saber quiénes son sus "Matches")
     List<Solicitud> findByEmisorIdAndEstadoOrReceptorIdAndEstado(Long emisorId, String estado1, Long receptorId, String estado2);
+
+    // Añade esto en tu SolicitudRepository.java
+    @Query("SELECT s FROM Solicitud s WHERE (s.emisor.id = :usuarioId OR s.receptor.id = :usuarioId) AND s.estado = 'ACEPTADA'")
+    List<Solicitud> findAceptadasPorUsuario(@Param("usuarioId") Long usuarioId);
 }

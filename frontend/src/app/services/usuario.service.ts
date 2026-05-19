@@ -53,5 +53,15 @@ export class UsuarioService {
     // Hacemos un PUT pasando el estado como parámetro en la URL, tal como pide tu Spring Boot
     return this.http.put<any>(`${this.apiUrlSolicitudes}/responder/${solicitudId}?estado=${estado}`, {}, { headers });
   }
-  
+
+// 5. Obtener compañeros (Solicitudes ACEPTADAS)
+  obtenerMisConexiones(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<any[]>(`${this.apiUrlSolicitudes}/aceptadas`, { headers });
+  }
+
 }

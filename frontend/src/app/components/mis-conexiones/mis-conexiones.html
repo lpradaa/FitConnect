@@ -1,0 +1,29 @@
+<div class="connections-container">
+  <h2>Mis Compañeros de Entrenamiento</h2>
+  <p>Haz clic en cualquiera de tus conexiones para empezar a hablar y coordinar el entreno.</p>
+
+  @if (conexiones.length === 0) {
+    <div class="no-connections">
+      <p>Aún no tienes conexiones aceptadas. ¡Sigue explorando el dashboard!</p>
+    </div>
+  } @else {
+    <div class="connections-list">
+      @for (solicitud of conexiones; track solicitud.id) {
+        <div class="connection-card" (click)="abrirChat(solicitud)">
+          <div class="avatar">
+            <span>
+              {{ solicitud.emisorId === miId ? solicitud.receptorNombre.charAt(0).toUpperCase() : solicitud.emisorNombre.charAt(0).toUpperCase() }}
+            </span>
+          </div>
+          
+          <div class="info">
+            <h3>{{ solicitud.emisorId === miId ? solicitud.receptorNombre : solicitud.emisorNombre }}</h3>
+            <p>🏋️‍♂️ ¡Conexión establecida!</p>
+          </div>
+          
+          <button class="btn-chat">💬 Chatear</button>
+        </div>
+      }
+    </div>
+  }
+</div>

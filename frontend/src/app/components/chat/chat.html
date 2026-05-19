@@ -1,0 +1,37 @@
+<div class="chat-wrapper">
+  <header class="chat-header">
+    <button class="btn-volver" routerLink="/conexiones">⬅ Volver</button>
+    <h2>💬 Sala de Entrenamiento</h2>
+  </header>
+
+  <div class="chat-body">
+    @for (msg of historial; track msg.id) {
+      
+      <div class="message-row" [ngClass]="{'sent': msg.emisorId !== companeroId, 'received': msg.emisorId === companeroId}">
+        <div class="bubble">
+          <p class="content">{{ msg.contenido }}</p>
+          <span class="time">{{ msg.fechaEnvio | date:'shortTime' }}</span>
+        </div>
+      </div>
+
+    } @empty {
+      <div class="empty-state">
+        <p>Aún no hay mensajes.</p>
+        <span>¡Rompe el hielo y propón una hora para entrenar! 🏋️‍♂️</span>
+      </div>
+    }
+  </div>
+
+  <footer class="chat-footer">
+    <input 
+      type="text" 
+      class="chat-input"
+      [(ngModel)]="nuevoMensaje" 
+      (keyup.enter)="enviar()"
+      placeholder="Escribe tu mensaje aquí..." 
+    />
+    <button class="btn-enviar" (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
+      Enviar 🚀
+    </button>
+  </footer>
+</div>

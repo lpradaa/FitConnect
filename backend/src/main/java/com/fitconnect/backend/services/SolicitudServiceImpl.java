@@ -110,4 +110,27 @@ public class SolicitudServiceImpl implements SolicitudService {
                 s.getEstado()
         );
     }
+
+    @Override
+    public List<SolicitudDTO> obtenerAceptadas(String email) {
+        // 1. Buscamos al usuario logueado en la base de datos por su email para sacar su ID
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con email: " + email));
+
+        // 2. Lanzamos la query que busca todas las solicitudes 'ACEPTADA' donde participe este ID
+        List<Solicitud> solicitudesAceptadas = solicitudRepository.findAceptadasPorUsuario(usuario.getId());
+
+        // 3. Convertimos la lista de Entidades a SolicitudDTO (el traductor seguro para el Frontend)
+        return solicitudesAceptadas.stream()
+                .map(s -> new SolicitudDTO(
+                        s.getId(),
+                        s.getEmisor().getId(),
+                        s.getEmisor().getNombre(),
+                        s.getReceptor().getId(),
+                        s.getReceptor().getNombre(),
+                        s.getEstado()
+                ))
+                .collect(Collectors.toList());
+    }
+    
 }
