@@ -138,6 +138,130 @@ $color-text-light: #a0aec0;
   }
 }
 
+/* --- NUEVO BLOQUE: matches-container & match-card (TARJETAS DE COMPAÑEROS) --- */
+.matches-container {
+  margin-top: 3rem;
+
+  &__title {
+    font-size: 1.4rem;
+    color: #1a202c;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.3px;
+  }
+}
+
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.match-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #edf2f7;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    background: #edf2f7;
+    color: #4a5568;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a202c;
+    }
+  }
+
+  &__gym {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #718096;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__actions {
+    margin-top: auto; 
+  }
+
+  &__btn {
+    width: 100%;
+    background-color: $color-card-bg-start;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+
+    &:hover {
+      background-color: $color-accent; 
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+/* --- Variaciones de Badges por Niveles --- */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &--avanzado {
+    background-color: rgba(32, 201, 151, 0.1);
+    color: #20c997;
+  }
+  &--intermedio {
+    background-color: rgba(66, 153, 225, 0.1);
+    color: #4299e1;
+  }
+  &--principiante {
+    background-color: rgba(237, 137, 54, 0.1);
+    color: #ed8936;
+  }
+}
+
 /* --- Adaptación a pantallas pequeñas (Móviles) --- */
 @media (max-width: 800px) {
   .welcome-card {

@@ -1,0 +1,82 @@
+$color-card-bg-start: #111a28;
+$color-accent: #20c997; 
+$color-danger: #e53e3e;
+$color-text-light: #a0aec0; 
+
+.dashboard {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header-section {
+  margin-bottom: 2.5rem;
+  &__title { font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem 0; color: #1a202c; }
+  &__subtitle { color: $color-text-light; font-size: 1.1rem; margin: 0; }
+}
+
+/* --- ESTADO VACÍO --- */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 20px;
+  border: 1px dashed #cbd5e0;
+  
+  &__icon { font-size: 4rem; margin-bottom: 1rem; }
+  h3 { color: #2d3748; margin-bottom: 0.5rem; }
+  p { color: #718096; }
+}
+
+/* --- TARJETAS (Heredado del Dashboard pero adaptado) --- */
+.matches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.match-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #edf2f7;
+
+  &__avatar {
+    width: 48px; height: 48px; background: #edf2f7; color: #4a5568;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.2rem;
+  }
+
+  &__header h4 { margin: 0; font-size: 1.15rem; font-weight: 700; color: #1a202c; }
+  &__gym { margin: 0; font-size: 0.9rem; color: #718096; }
+}
+
+.badge {
+  padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700;
+  &--pendiente { background-color: rgba(237, 137, 54, 0.1); color: #ed8936; }
+}
+
+/* --- BOTONES DOBLES --- */
+.action-buttons {
+  display: flex; gap: 0.8rem; margin-top: auto;
+}
+
+.btn {
+  flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; font-weight: 600;
+  border-radius: 10px; cursor: pointer; transition: transform 0.1s;
+  &:active { transform: scale(0.96); }
+
+  &--accept {
+    background-color: $color-accent; color: white;
+    &:hover { background-color: darken($color-accent, 10%); }
+  }
+
+  &--reject {
+    background-color: #edf2f7; color: #4a5568;
+    &:hover { background-color: #e2e8f0; color: $color-danger; }
+  }
+}

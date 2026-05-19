@@ -25,16 +25,35 @@
     </div>
   </section>
 
-  <section class="matches-container" *ngIf="usuariosCompatibles.length > 0">
-    <h3>Compañeros compatibles encontrados:</h3>
+  <section class="matches-container" *ngIf="usuariosCompatibles && usuariosCompatibles.length > 0">
+    <h3 class="matches-container__title">Compañeros disponibles en tu gimnasio</h3>
+    
     <div class="matches-grid">
       <div class="match-card" *ngFor="let user of usuariosCompatibles">
-        <div class="match-card__header">
-          <h4>{{ user.nombre }}</h4>
-          <span class="badge">{{ user.nivel }}</span>
+        
+        <div class="match-card__avatar">
+          <span>{{ user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U' }}</span>
         </div>
-        <p class="match-card__gym">📍 {{ user.gimnasio?.nombre || 'Gimnasio no asignado' }}</p>
-        <button class="match-card__btn">Enviar Mensaje</button>
+
+        <div class="match-card__body">
+          <div class="match-card__header">
+            <h4>{{ user.nombre }}</h4>
+            <span class="badge" [className]="'badge badge--' + (user.nivel ? user.nivel.toLowerCase() : 'intermedio')">
+              {{ user.nivel || 'Intermedio' }}
+            </span>
+          </div>
+          
+          <p class="match-card__gym">
+            <span>📍</span> {{ user.gimnasio?.nombre || 'Gimnasio Habitual' }}
+          </p>
+        </div>
+
+        <div class="match-card__actions">
+          <button class="match-card__btn" (click)="conectarConUsuario(user.id)">
+            💬 Enviar Mensaje
+          </button>
+        </div>
+
       </div>
     </div>
   </section>
