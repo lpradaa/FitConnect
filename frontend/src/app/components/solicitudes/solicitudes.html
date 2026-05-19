@@ -1,0 +1,47 @@
+<div class="dashboard">
+  <div class="header-section">
+    <h2 class="header-section__title">Bandeja de Solicitudes</h2>
+    <p class="header-section__subtitle">Gestiona las personas que quieren entrenar contigo.</p>
+  </div>
+
+  @if (solicitudesPendientes.length === 0) {
+    
+    <div class="empty-state">
+      <div class="empty-state__icon">📭</div>
+      <h3>No tienes solicitudes nuevas</h3>
+      <p>Sigue usando la plataforma, pronto alguien querrá conectar contigo.</p>
+    </div>
+
+  } @else {
+
+    <div class="matches-grid">
+      @for (solicitud of solicitudesPendientes; track solicitud.id) {
+        
+        <div class="match-card">
+          <div class="match-card__avatar">
+            <span>{{ solicitud.emisorNombre ? solicitud.emisorNombre.charAt(0).toUpperCase() : 'U' }}</span>
+          </div>
+
+          <div class="match-card__body">
+            <div class="match-card__header">
+              <h4>{{ solicitud.emisorNombre }}</h4>
+              <span class="badge badge--pendiente">NUEVA</span>
+            </div>
+            <p class="match-card__gym">Quiere conectar contigo para entrenar.</p>
+          </div>
+
+          <div class="match-card__actions action-buttons">
+            <button class="btn btn--reject" (click)="responder(solicitud.id, 'RECHAZADA')">
+              Rechazar
+            </button>
+            <button class="btn btn--accept" (click)="responder(solicitud.id, 'ACEPTADA')">
+              Aceptar
+            </button>
+          </div>
+        </div>
+
+      }
+    </div>
+
+  }
+</div>

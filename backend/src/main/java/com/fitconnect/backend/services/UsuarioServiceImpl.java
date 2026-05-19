@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service 
 public class UsuarioServiceImpl implements UsuarioService {
@@ -94,8 +95,44 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         // 5. Devolvemos el DTO de respuesta seguro
         return new UsuarioResponseDTO(
-                guardado.getId(), guardado.getNombre(), guardado.getEmail(),
-                guardado.getEdad(), guardado.getGenero(), guardado.getPeso()
+                guardado.getId(), 
+                guardado.getNombre(), 
+                guardado.getEmail(),
+                guardado.getEdad(), 
+                guardado.getGenero(), 
+                guardado.getPeso(),
+                guardado.getNivel(),       
+                guardado.getObjetivos(),
+                guardado.getGimnasio() != null ? guardado.getGimnasio().getId() : null
         );
+    }
+
+    @Override
+    public List<UsuarioResponseDTO> buscarCompañeros(String email) {
+        // 1. Buscamos quién es el usuario que está haciendo la petición
+        Usuario miUsuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                
+        // 2. Validamos que tenga un gimnasio (si no, no puede buscar)
+        if (miUsuario.getGimnasio() == null) {
+            throw new RuntimeException("Debes tener un gimnasio asignado para buscar compañeros.");
+        }
+
+        // 3. Ejecutamos la super-consulta del repositorio
+        List<Usuario> matches = usuarioRepository.buscarMatches(
+                miUsuario.getGimnasio().getId(), 
+                miUsuario.getId(), 
+                miUsuario.getNivel()
+        );
+
+        // 4. Convertimos la lista de Usuarios a DTOs seguros
+        return matches.stream()
+                .map(u -> new UsuarioResponseDTO(
+                        u.getId(), u.getNombre(), u.getEmail(), 
+                        u.getEdad(), u.getGenero(), u.getPeso(), 
+                        u.getNivel(), u.getObjetivos(), 
+                        u.getGimnasio() != null ? u.getGimnasio().getId() : null
+                ))
+                .collect(Collectors.toList());
     }
 }
