@@ -11,6 +11,9 @@ public class UsuarioResponseDTO {
     private String objetivos;
     private Long gimnasioId;
 
+    private Boolean yaConectado = false;
+    private Boolean solicitudPendiente = false;
+
     // Constructor que convierte la Entidad en DTO fácilmente
     public UsuarioResponseDTO(Long id, String nombre, String email, Integer edad, String genero, Float peso) {
         this.id = id;
@@ -52,4 +55,8 @@ public class UsuarioResponseDTO {
     public void setObjetivos(String objetivos) { this.objetivos = objetivos; }
     public Long getGimnasioId() { return gimnasioId; }
     public void setGimnasioId(Long gimnasioId) { this.gimnasioId = gimnasioId; }
+    public Boolean getYaConectado() { return yaConectado; }
+    public void setYaConectado(Boolean yaConectado) { this.yaConectado = yaConectado; }
+    public Boolean getSolicitudPendiente() { return solicitudPendiente; }
+    public void setSolicitudPendiente(Boolean solicitudPendiente) { this.solicitudPendiente = solicitudPendiente; }
 }

@@ -1,82 +1,100 @@
-$color-card-bg-start: #111a28;
-$color-accent: #20c997; 
-$color-danger: #e53e3e;
-$color-text-light: #a0aec0; 
+/* 1. Importamos el archivo maestro */
+@import '../../../scss/index';
 
 .dashboard {
-  padding: 2rem;
+  padding: $space-lg;
   max-width: 1000px;
   margin: 0 auto;
 }
 
 .header-section {
-  margin-bottom: 2.5rem;
-  &__title { font-size: 2rem; font-weight: 800; margin: 0 0 0.5rem 0; color: #1a202c; }
-  &__subtitle { color: $color-text-light; font-size: 1.1rem; margin: 0; }
+  margin-bottom: $space-lg;
+
+  &__title { 
+    font-size: $text-3xl; 
+    font-weight: $font-extrabold; 
+    margin: 0 0 $space-xs 0; 
+    color: $text-main; 
+  }
+  
+  &__subtitle { 
+    color: $text-muted; 
+    font-size: $text-base; 
+    margin: 0; 
+  }
 }
 
 /* --- ESTADO VACÍO --- */
 .empty-state {
   text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 20px;
-  border: 1px dashed #cbd5e0;
+  padding: 4rem $space-md;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  border: 1px dashed $border;
   
-  &__icon { font-size: 4rem; margin-bottom: 1rem; }
-  h3 { color: #2d3748; margin-bottom: 0.5rem; }
-  p { color: #718096; }
+  &__icon { font-size: 4rem; margin-bottom: $space-sm; }
+  h3 { color: $text-main; margin-bottom: $space-xs; }
+  p { color: $text-muted; }
 }
 
-/* --- TARJETAS (Heredado del Dashboard pero adaptado) --- */
+/* --- TARJETAS DE SOLICITUDES --- */
 .matches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  gap: $space-md;
 }
 
 .match-card {
-  background: white;
-  border-radius: 20px;
-  padding: 1.5rem;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  padding: $space-md;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: $space-md;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  border: 1px solid #edf2f7;
+  border: 1px solid $border;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-  &__avatar {
-    width: 48px; height: 48px; background: #edf2f7; color: #4a5568;
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 1.2rem;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   }
 
-  &__header h4 { margin: 0; font-size: 1.15rem; font-weight: 700; color: #1a202c; }
-  &__gym { margin: 0; font-size: 0.9rem; color: #718096; }
+  &__avatar {
+    width: 48px; height: 48px; background: $input-bg; color: $text-muted;
+    border-radius: $radius-md; display: flex; align-items: center; justify-content: center;
+    font-weight: $font-bold; font-size: $text-lg;
+  }
+
+  &__header h4 { margin: 0; font-size: $text-lg; font-weight: $font-bold; color: $text-main; }
+  &__gym { margin: 0; font-size: $text-sm; color: $text-muted; }
 }
 
 .badge {
-  padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700;
-  &--pendiente { background-color: rgba(237, 137, 54, 0.1); color: #ed8936; }
+  padding: 4px $space-sm; border-radius: $radius-full; font-size: $text-xs; font-weight: $font-bold;
+  text-transform: uppercase;
+  
+  &--pendiente { background-color: rgba(#ed8936, 0.1); color: #ed8936; }
 }
 
 /* --- BOTONES DOBLES --- */
 .action-buttons {
-  display: flex; gap: 0.8rem; margin-top: auto;
+  display: flex; gap: $space-sm; margin-top: auto;
 }
 
 .btn {
-  flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; font-weight: 600;
-  border-radius: 10px; cursor: pointer; transition: transform 0.1s;
+  flex: 1; border: none; padding: 12px; font-size: $text-sm; font-weight: $font-semibold;
+  border-radius: $radius-sm; cursor: pointer; transition: transform 0.1s, background-color 0.2s;
+  
   &:active { transform: scale(0.96); }
 
   &--accept {
-    background-color: $color-accent; color: white;
-    &:hover { background-color: darken($color-accent, 10%); }
+    background-color: $accent; color: white;
+    &:hover { background-color: darken($accent, 10%); }
   }
 
   &--reject {
-    background-color: #edf2f7; color: #4a5568;
-    &:hover { background-color: #e2e8f0; color: $color-danger; }
+    background-color: $input-bg; color: $text-muted;
+    &:hover { background-color: darken($input-bg, 5%); color: $color-danger; }
   }
 }

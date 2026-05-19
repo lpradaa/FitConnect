@@ -1,78 +1,89 @@
-/* --- Variables locales del Dashboard --- */
-$color-card-bg-start: #111a28;
-$color-card-bg-end: #0d2127;
-$color-accent: #20c997; 
-$color-text-light: #a0aec0; 
+@import '../../../scss/index';
 
 .dashboard {
-  padding: 2rem;
+  padding: $space-lg;
   max-width: 1000px;
   margin: 0 auto;
 }
 
 /* --- BLOQUE: welcome-card --- */
 .welcome-card {
-  background: linear-gradient(135deg, $color-card-bg-start 0%, $color-card-bg-end 100%);
-  border-radius: 24px;
-  padding: 3rem;
+  background: linear-gradient(135deg, $text-main 0%, darken($text-main, 5%) 100%);
+  border-radius: $radius-lg;
+  padding: $space-lg;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  gap: $space-xl;
   color: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 
+  @include tablet {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    gap: 0;
+    padding: $space-xl;
+  }
+
   &__content {
-    max-width: 65%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.2rem;
+    align-items: center;
+    gap: $space-md;
+
+    @include tablet {
+      max-width: 65%;
+      align-items: flex-start;
+    }
   }
 
   &__badge {
-    background-color: rgba(32, 201, 151, 0.1);
-    color: $color-accent;
-    padding: 0.4rem 1rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 800;
+    background-color: rgba($accent, 0.1); 
+    color: $accent;
+    padding: $space-xs $space-sm;
+    border-radius: $radius-full;
+    font-size: $text-xs;
+    font-weight: $font-extrabold;
     letter-spacing: 1px;
-    border: 1px solid rgba(32, 201, 151, 0.2);
+    border: 1px solid rgba($accent, 0.2);
   }
 
   &__title {
-    font-size: 2.5rem;
+    font-size: $text-4xl;
     margin: 0;
-    font-weight: 800;
+    font-weight: $font-extrabold;
     letter-spacing: -0.5px;
   }
 
   &__description {
-    font-size: 1.1rem;
-    color: $color-text-light;
+    font-size: $text-lg;
+    color: $text-muted;
     line-height: 1.6;
     margin: 0;
 
     strong {
       color: white;
-      font-weight: 700;
+      font-weight: $font-bold;
     }
   }
 
   &__button {
-    margin-top: 0.5rem;
-    background-color: $color-accent;
+    margin-top: $space-xs;
+    background-color: $accent;
     color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 12px;
+    padding: $space-sm $space-md;
+    font-size: $text-base;
+    font-weight: $font-bold;
+    border-radius: $radius-md;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
 
     &:hover {
-      background-color: #17a589;
+      background-color: darken($accent, 10%);
     }
     
     &:active {
@@ -84,7 +95,11 @@ $color-text-light: #a0aec0;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 1rem;
+    padding-right: 0;
+
+    @include tablet {
+      padding-right: $space-sm;
+    }
   }
 }
 
@@ -108,7 +123,7 @@ $color-text-light: #a0aec0;
 
   &__value {
     fill: none;
-    stroke: $color-accent;
+    stroke: $accent;
     stroke-width: 3;
     stroke-linecap: round; 
     transition: stroke-dasharray 1s ease-out;
@@ -125,28 +140,28 @@ $color-text-light: #a0aec0;
   }
 
   &__fraction {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: $text-3xl;
+    font-weight: $font-extrabold;
     color: white;
   }
 
   &__label {
-    font-size: 0.75rem;
-    color: $color-text-light;
-    font-weight: 600;
+    font-size: $text-xs;
+    color: $text-muted;
+    font-weight: $font-semibold;
     letter-spacing: 1.5px;
   }
 }
 
-/* --- NUEVO BLOQUE: matches-container & match-card (TARJETAS DE COMPAÑEROS) --- */
+/* --- BLOQUE: matches-container & match-card --- */
 .matches-container {
-  margin-top: 3rem;
+  margin-top: $space-xl;
 
   &__title {
-    font-size: 1.4rem;
-    color: #1a202c;
-    font-weight: 800;
-    margin-bottom: 1.5rem;
+    font-size: $text-2xl;
+    color: $text-main;
+    font-weight: $font-extrabold;
+    margin-bottom: $space-md;
     letter-spacing: -0.3px;
   }
 }
@@ -154,18 +169,18 @@ $color-text-light: #a0aec0;
 .matches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: $space-md;
 }
 
 .match-card {
-  background: white;
-  border-radius: 20px;
-  padding: 1.5rem;
+  background: $bg-card;
+  border-radius: $radius-lg;
+  padding: $space-md;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: $space-sm;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  border: 1px solid #edf2f7;
+  border: 1px solid $border;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -176,20 +191,20 @@ $color-text-light: #a0aec0;
   &__avatar {
     width: 48px;
     height: 48px;
-    background: #edf2f7;
-    color: #4a5568;
-    border-radius: 12px;
+    background: $border;
+    color: $text-muted;
+    border-radius: $radius-md;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.2rem;
+    font-weight: $font-bold;
+    font-size: $text-lg;
   }
 
   &__body {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: $space-xs;
   }
 
   &__header {
@@ -199,19 +214,19 @@ $color-text-light: #a0aec0;
 
     h4 {
       margin: 0;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #1a202c;
+      font-size: $text-lg;
+      font-weight: $font-bold;
+      color: $text-main;
     }
   }
 
   &__gym {
     margin: 0;
-    font-size: 0.9rem;
-    color: #718096;
+    font-size: $text-sm;
+    color: $text-muted;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: $space-xs;
   }
 
   &__actions {
@@ -220,18 +235,18 @@ $color-text-light: #a0aec0;
 
   &__btn {
     width: 100%;
-    background-color: $color-card-bg-start;
+    background-color: $text-main;
     color: white;
     border: none;
-    padding: 0.75rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    border-radius: 10px;
+    padding: $space-sm;
+    font-size: $text-sm;
+    font-weight: $font-semibold;
+    border-radius: $radius-sm;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
 
     &:hover {
-      background-color: $color-accent; 
+      background-color: $accent; 
     }
 
     &:active {
@@ -242,41 +257,22 @@ $color-text-light: #a0aec0;
 
 /* --- Variaciones de Badges por Niveles --- */
 .badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  font-size: 0.7rem;
-  font-weight: 700;
+  padding: 4px $space-sm;
+  border-radius: $radius-full;
+  font-size: $text-xs;
+  font-weight: $font-bold;
   text-transform: uppercase;
 
   &--avanzado {
-    background-color: rgba(32, 201, 151, 0.1);
-    color: #20c997;
+    background-color: rgba($accent, 0.1);
+    color: $accent;
   }
   &--intermedio {
-    background-color: rgba(66, 153, 225, 0.1);
+    background-color: rgba(#4299e1, 0.1);
     color: #4299e1;
   }
   &--principiante {
-    background-color: rgba(237, 137, 54, 0.1);
+    background-color: rgba(#ed8936, 0.1);
     color: #ed8936;
-  }
-}
-
-/* --- Adaptación a pantallas pequeñas (Móviles) --- */
-@media (max-width: 800px) {
-  .welcome-card {
-    flex-direction: column;
-    text-align: center;
-    gap: 3rem;
-    padding: 2rem;
-
-    &__content {
-      max-width: 100%;
-      align-items: center;
-    }
-    
-    &__progress {
-      padding-right: 0;
-    }
   }
 }

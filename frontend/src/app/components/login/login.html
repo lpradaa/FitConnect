@@ -1,30 +1,50 @@
-<div class="login-page" style="max-w: 400px; margin: 4rem auto; padding: 2rem; background: white; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; font-family: sans-serif;">
+<div class="login-wrapper">
   
-  <h2 style="margin-bottom: 0.5rem; color: #0f172a; font-size: 1.75rem; font-weight: 800; text-align: center;">¡Hola de nuevo! 👋</h2>
-  <p style="color: #64748b; font-size: 0.875rem; text-align: center; margin-bottom: 2rem;">Inicia sesión en FitConnect para encontrar a tu compañero de gimnasio.</p>
+  <div class="login-card">
+    <header class="login-header">
+      <h1 class="title">¡Hola de nuevo! 👋</h1>
+      <p class="subtitle">
+        Inicia sesión en <span class="brand-text">FitConnect</span> para encontrar a tu compañero de gimnasio.
+      </p>
+    </header>
 
-  <div *ngIf="errorMessage()" style="background: #fef2f2; color: #b91c1c; padding: 0.75rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1.5rem; border: 1px solid #fee2e2; font-weight: 500;">
-    ⚠️ {{ errorMessage() }}
+    <form class="login-form" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="email">Email institucional o personal</label>
+        <div class="input-container">
+          <input 
+            type="email" 
+            id="email" 
+            name="email"
+            [(ngModel)]="email" 
+            placeholder="ejemplo@correo.com"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="input-container">
+          <input 
+            type="password" 
+            id="password" 
+            name="password"
+            [(ngModel)]="password" 
+            placeholder="••••••••"
+            required>
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message" style="color: #e74c3c; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button type="submit" class="submit-btn" [disabled]="!email || !password">
+        Entrar a FitConnect <span>→</span>
+      </button>
+    </form>
   </div>
 
-  <form (ngSubmit)="onLogin()" #loginForm="ngForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
-    
-    <div style="display: flex; flex-direction: column; gap: 0.37rem;">
-      <label style="font-size: 0.875rem; font-weight: 600; color: #334155;">Email institucional o personal</label>
-      <input type="email" name="email" [(ngModel)]="email" required placeholder="ejemplo@correo.com" 
-             style="padding: 0.75rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem; outline: none;">
-    </div>
-
-    <div style="display: flex; flex-direction: column; gap: 0.37rem;">
-      <label style="font-size: 0.875rem; font-weight: 600; color: #334155;">Contraseña</label>
-      <input type="password" name="password" [(ngModel)]="password" required placeholder="••••••••" 
-             style="padding: 0.75rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem; outline: none;">
-    </div>
-
-    <button type="submit" [disabled]="!loginForm.form.valid" 
-            style="margin-top: 1rem; background: #0f172a; color: white; padding: 0.75rem; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">
-      Entrar a FitConnect
-    </button>
-
-  </form>
 </div>

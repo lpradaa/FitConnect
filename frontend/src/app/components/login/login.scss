@@ -1,0 +1,151 @@
+@import '../../../scss/index';
+
+/* --- Contenedor Principal --- */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $bg-body-start 0%, $bg-body-end 100%);
+  padding: $space-md;
+}
+
+/* --- Tarjeta del Login --- */
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: $bg-card;
+  padding: $space-xl;
+  border-radius: $radius-lg;
+  border-top: 4px solid $accent;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  margin-bottom: $space-lg;
+  box-sizing: border-box;
+}
+
+/* --- Cabecera --- */
+.login-header {
+  text-align: center;
+  margin-bottom: $space-lg;
+
+  .title {
+    font-size: $text-4xl;
+    font-weight: $font-extrabold;
+    color: $text-main;
+    margin: 0 0 $space-xs 0;
+  }
+
+  .subtitle {
+    color: $text-muted;
+    font-size: $text-base;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .brand-text {
+    font-weight: $font-bold;
+    color: $accent;
+  }
+}
+
+/* --- Formulario --- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+/* Grupos de input */
+.form-group {
+  label {
+    display: block;
+    font-size: $text-sm;
+    font-weight: $font-semibold;
+    color: $text-main;
+    margin-bottom: $space-xs;
+  }
+}
+
+/* Contenedor relativo para posicionar el icono */
+.input-container {
+  position: relative;
+
+  .icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: $space-sm;
+    display: flex;
+    align-items: center;
+    font-size: $text-lg;
+    color: $text-placeholder; 
+  }
+
+  input {
+    width: 100%;
+    padding: 12px $space-sm 12px 44px; 
+    background-color: $input-bg;
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    font-size: $text-sm;
+    color: $text-main;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    outline: none;
+
+    &::placeholder {
+      color: $text-placeholder;
+    }
+
+    &:focus {
+      border-color: $accent;
+      background-color: $bg-card;
+      box-shadow: 0 0 0 3px rgba($accent, 0.15); 
+    }
+  }
+}
+
+/* --- Botón de Submit --- */
+.submit-btn {
+  width: 100%;
+  margin-top: $space-xs;
+  background: linear-gradient(90deg, $accent 0%, $gradient-end 100%);
+  color: white;
+  border: none;
+  padding: $space-sm;
+  border-radius: $radius-md;
+  font-weight: $font-bold;
+  font-size: $text-base;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-xs;
+  box-shadow: 0 4px 14px 0 rgba($accent, 0.35); 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  span {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($accent, 0.45);
+    
+    span:last-child {
+      transform: translateX(4px); 
+    }
+  }
+}
+
+/* --- Footer --- */
+.login-footer {
+  text-align: center;
+  color: $text-muted;
+  font-size: $text-sm;
+
+  span {
+    color: $text-placeholder;
+  }
+}
