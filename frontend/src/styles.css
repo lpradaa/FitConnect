@@ -11,8 +11,7 @@
 /* Grosores de fuente */
 html, body {
   margin: 0;
-  padding: 0;
-  min-height: 100vh;
+  padding-top: 70px;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: #1f2937;
   background-color: #ecfeff;

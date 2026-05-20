@@ -10,9 +10,10 @@
 /* Grosores de fuente */
 /* --- BLOQUE: header --- */
 .header {
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 30;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -28,7 +29,7 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   /* Efecto Glassmorphism */
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: #ffffff;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.5);

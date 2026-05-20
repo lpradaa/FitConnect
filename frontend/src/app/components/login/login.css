@@ -24,7 +24,6 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background: linear-gradient(135deg, #ecfeff 0%, #ffffff 100%);
   padding: 24px;
 }
 
