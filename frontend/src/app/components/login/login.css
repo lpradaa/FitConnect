@@ -49,6 +49,30 @@
   margin-bottom: 40px;
 }
 
+.login-header .login-logo-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 24px;
+}
+
+.login-header .login-logo-container .logo-isotipo {
+  height: 50px;
+  width: auto;
+  -webkit-transition: -webkit-transform 0.3s ease;
+  transition: -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+}
+
+.login-header .login-logo-container .logo-isotipo:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+}
+
 .login-header .title {
   font-size: 36px;
   font-weight: 800;
