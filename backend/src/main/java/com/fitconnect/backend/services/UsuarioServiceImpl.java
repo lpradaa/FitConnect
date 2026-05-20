@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,9 +30,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final PasswordEncoder passwordEncoder;
     private final GimnasioRepository gimnasioRepository;
     private final SolicitudRepository solicitudRepository;
-    private final DisponibilidadRepository disponibilidadRepository; // 👈 NUEVO
+    private final DisponibilidadRepository disponibilidadRepository;
 
-    // No olvides añadir el nuevo repositorio al constructor
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, GimnasioRepository gimnasioRepository, SolicitudRepository solicitudRepository, DisponibilidadRepository disponibilidadRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
@@ -55,14 +56,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         Usuario guardado = usuarioRepository.save(nuevoUsuario);
 
-        return new UsuarioResponseDTO(
-                guardado.getId(),
-                guardado.getNombre(),
-                guardado.getEmail(),
-                guardado.getEdad(),
-                guardado.getGenero(),
-                guardado.getPeso()
-        );
+        return new UsuarioResponseDTO(guardado.getId(), guardado.getNombre(), guardado.getEmail(), guardado.getEdad(), guardado.getGenero(), guardado.getPeso());
     }
 
     @Override
@@ -76,18 +70,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional // 🔥 MUY IMPORTANTE: Asegura que el borrado y la inserción se hagan como un bloque seguro
+    @Transactional
     public UsuarioResponseDTO actualizarPerfil(String email, UsuarioPerfilDTO dto) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado en la base de datos."));
 
-        // Actualizamos los datos del usuario
         usuario.setEdad(dto.getEdad());
         usuario.setGenero(dto.getGenero());
         usuario.setPeso(dto.getPeso());
         usuario.setNivel(dto.getNivel());
         usuario.setObjetivos(dto.getObjetivos());
-        usuario.setAvatar(dto.getAvatar()); // 👈 Guardamos el Avatar
+        usuario.setAvatar(dto.getAvatar());
 
         if (dto.getGimnasioId() != null) {
             Gimnasio gimnasio = gimnasioRepository.findById(dto.getGimnasioId())
@@ -97,39 +90,65 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         Usuario guardado = usuarioRepository.save(usuario);
 
-        // 🔥 GESTIÓN DE HORARIOS: Borramos los antiguos y guardamos los nuevos
         if (dto.getHorarios() != null) {
-            disponibilidadRepository.deleteByUsuarioId(guardado.getId()); // Adiós horarios viejos
+            disponibilidadRepository.deleteByUsuarioId(guardado.getId());
             
             for (UsuarioPerfilDTO.HorarioDTO horario : dto.getHorarios()) {
                 Disponibilidad nuevaDisp = new Disponibilidad(
                     horario.getDiaSemana(),
-                    LocalTime.parse(horario.getHoraInicio()), // Convierte "10:30" a LocalTime de Java
+                    LocalTime.parse(horario.getHoraInicio()),
                     LocalTime.parse(horario.getHoraFin()),
                     guardado
                 );
-                disponibilidadRepository.save(nuevaDisp); // Guardamos horario a horario
+                disponibilidadRepository.save(nuevaDisp);
             }
         }
 
         return new UsuarioResponseDTO(
-                guardado.getId(), 
-                guardado.getNombre(), 
-                guardado.getEmail(),
-                guardado.getEdad(), 
-                guardado.getGenero(), 
-                guardado.getPeso(),
-                guardado.getNivel(),       
-                guardado.getObjetivos(),
+                guardado.getId(), guardado.getNombre(), guardado.getEmail(),
+                guardado.getEdad(), guardado.getGenero(), guardado.getPeso(),
+                guardado.getNivel(), guardado.getObjetivos(),
                 guardado.getGimnasio() != null ? guardado.getGimnasio().getId() : null,
-                guardado.getAvatar() // 👈 AÑADIR ESTO AL FINAL
+                guardado.getAvatar()
         );
+    }
+
+    // 🔥 NUEVO: Construye un diccionario con los datos del usuario y le suma sus horarios
+    @Override
+    public Map<String, Object> obtenerMiPerfilCompleto(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        Map<String, Object> perfil = new HashMap<>();
+        perfil.put("id", usuario.getId());
+        perfil.put("nombre", usuario.getNombre());
+        perfil.put("email", usuario.getEmail());
+        perfil.put("edad", usuario.getEdad());
+        perfil.put("genero", usuario.getGenero());
+        perfil.put("peso", usuario.getPeso());
+        perfil.put("nivel", usuario.getNivel());
+        perfil.put("objetivos", usuario.getObjetivos());
+        perfil.put("gimnasioId", usuario.getGimnasio() != null ? usuario.getGimnasio().getId() : null);
+        perfil.put("avatar", usuario.getAvatar());
+
+        // Buscamos los horarios de este usuario en la BD y los pasamos al formato que lee Angular
+        List<UsuarioPerfilDTO.HorarioDTO> horarios = disponibilidadRepository.findByUsuarioId(usuario.getId())
+                .stream().map(d -> {
+                    UsuarioPerfilDTO.HorarioDTO h = new UsuarioPerfilDTO.HorarioDTO();
+                    h.setDiaSemana(d.getDiaSemana());
+                    h.setHoraInicio(d.getHoraInicio().toString()); // Pasa de LocalTime a String "10:30"
+                    h.setHoraFin(d.getHoraFin().toString());
+                    return h;
+                }).collect(Collectors.toList());
+
+        perfil.put("horarios", horarios);
+
+        return perfil;
     }
 
     @Override
     public List<UsuarioResponseDTO> buscarCompañeros(String email) {
         Usuario miUsuario = usuarioRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        
         List<Usuario> matches = usuarioRepository.buscarMatches(miUsuario.getGimnasio().getId(), miUsuario.getId(), miUsuario.getNivel());
 
         return matches.stream().map(u -> {

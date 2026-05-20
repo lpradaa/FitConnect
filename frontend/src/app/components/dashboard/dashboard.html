@@ -16,12 +16,35 @@
       <div class="progress-circle">
         <svg viewBox="0 0 36 36" class="progress-circle__svg">
           <path class="progress-circle__bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-          <path class="progress-circle__value" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          <path class="progress-circle__value" [attr.stroke-dasharray]="progressPercentage() + ', 100'" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
         </svg>
         <div class="progress-circle__text">
-          <span class="progress-circle__fraction">{{ completedDays() }}/{{ totalDays() }}</span>
-          <span class="progress-circle__label">DÍAS</span>
+          <span class="progress-circle__fraction" [style.color]="completedDays() >= totalDays() ? '#2ecc71' : 'white'">
+            {{ completedDays() }}/{{ totalDays() }}
+          </span>
+          <span class="progress-circle__label" *ngIf="completedDays() < totalDays()">DÍAS</span>
+          <span class="progress-circle__label" *ngIf="completedDays() >= totalDays()" style="color: #2ecc71; font-size: 10px; font-weight: 800;">¡RETO SUPERADO!</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="meta-card">
+    <div class="meta-card__header">
+      <h3>🎯 Ajustar mi Meta Semanal</h3>
+      <span class="meta-card__value">{{ totalDays() }} {{ totalDays() === 1 ? 'día' : 'días' }}</span>
+    </div>
+    <div class="meta-card__slider-container">
+      <input 
+        type="range" 
+        min="1" 
+        max="7" 
+        [value]="totalDays()" 
+        (input)="actualizarMetaDesdeSlider($event)"
+        class="slider"
+      />
+      <div class="meta-card__slider-labels">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
       </div>
     </div>
   </section>
@@ -73,6 +96,24 @@
     </div>
 
     <aside class="sidebar-column">
+
+      <div class="notifications-widget" *ngIf="solicitudesPendientes.length > 0">
+        <div class="notifications-header">
+          <h3>🔔 Solicitudes Nuevas</h3>
+          <span class="notifications-count">{{ solicitudesPendientes.length }}</span>
+        </div>
+        <div class="request-list">
+          <div class="request-item" *ngFor="let sol of solicitudesPendientes">
+            <div class="request-info">
+              <strong>{{ sol.emisorNombre }}</strong> te ha enviado una solicitud.
+            </div>
+            <div class="request-actions">
+              <button class="btn-accept" (click)="responderSolicitud(sol.id, 'ACEPTADA')" title="Aceptar">✅</button>
+              <button class="btn-reject" (click)="responderSolicitud(sol.id, 'RECHAZADA')" title="Rechazar">❌</button>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div class="profile-widget">
         <div class="profile-widget__header">

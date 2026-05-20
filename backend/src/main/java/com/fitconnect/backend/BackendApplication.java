@@ -22,7 +22,7 @@ public class BackendApplication {
                 
                 // Mapeamos los datos mínimos que pida vuestro DTO
                 nuevoUser.setEmail("luis-tfg@test.com");
-                nuevoUser.setPassword("123456"); // Tu clave limpia
+                nuevoUser.setPassword("123456"); 
                 nuevoUser.setNombre("Luis Admin");
                 
                 // Si vuestro DTO tiene más campos obligatorios (edad, genero...),

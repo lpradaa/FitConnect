@@ -5,6 +5,7 @@ import com.fitconnect.backend.dtos.UsuarioRegistroDTO;
 import com.fitconnect.backend.dtos.UsuarioResponseDTO;
 import com.fitconnect.backend.models.Usuario;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface UsuarioService {
@@ -13,4 +14,6 @@ public interface UsuarioService {
     List<Usuario> obtenerTodosLosUsuarios();
     UsuarioResponseDTO actualizarPerfil(String email, UsuarioPerfilDTO dto);
     List<UsuarioResponseDTO> buscarCompañeros(String email);
+    
+    Map<String, Object> obtenerMiPerfilCompleto(String email);
 }

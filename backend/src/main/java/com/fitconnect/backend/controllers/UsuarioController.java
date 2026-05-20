@@ -7,6 +7,8 @@ import com.fitconnect.backend.models.Usuario;
 import com.fitconnect.backend.services.UsuarioService;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -71,22 +73,11 @@ public class UsuarioController {
     public ResponseEntity<?> obtenerMiPerfil() {
         try {
             String emailLogueado = SecurityContextHolder.getContext().getAuthentication().getName();
-            Usuario usuario = usuarioService.buscarPorEmail(emailLogueado)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-                    
-            UsuarioResponseDTO dto = new UsuarioResponseDTO(
-                    usuario.getId(), 
-                    usuario.getNombre(), 
-                    usuario.getEmail(), 
-                    usuario.getEdad(), 
-                    usuario.getGenero(), 
-                    usuario.getPeso(), 
-                    usuario.getNivel(), 
-                    usuario.getObjetivos(), 
-                    usuario.getGimnasio() != null ? usuario.getGimnasio().getId() : null,
-                    usuario.getAvatar() // 🔥 Enviamos el avatar a Angular
-            );
-            return ResponseEntity.ok(dto);
+            
+            // Llamamos al nuevo método que nos empaqueta todo, ¡incluyendo los horarios!
+            Map<String, Object> perfilCompleto = usuarioService.obtenerMiPerfilCompleto(emailLogueado);
+            
+            return ResponseEntity.ok(perfilCompleto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al obtener el perfil: " + e.getMessage());
         }
