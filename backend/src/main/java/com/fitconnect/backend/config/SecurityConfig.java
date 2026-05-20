@@ -9,8 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration; // 👈 Importación necesaria
-import java.util.List; // 👈 Importación necesaria
+import org.springframework.web.cors.CorsConfiguration; 
+import java.util.List; 
 
 @Configuration
 @EnableWebSecurity
@@ -28,40 +28,38 @@ public class SecurityConfig {
     }
 
     @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        // 1. Desactivamos CSRF porque usamos tokens JWT de forma stateless
-        .csrf(csrf -> csrf.disable())
-        
-        // 2. Configuramos el CORS para que Angular pueda hablar con Spring Boot
-        .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
-        
-        // 3. Filtramos las rutas protegidas y públicas
-        .authorizeHttpRequests(auth -> auth
-            // Permitimos el login y registro sin token
-            .requestMatchers("/api/auth/**", "/api/usuarios/registro").permitAll()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            // 1. Desactivamos CSRF porque usamos tokens JWT de forma stateless
+            .csrf(csrf -> csrf.disable())
             
-            // 🚫 AQUÍ ESTÁ EL RECORTE: Asegúrate de que las rutas de usuarios y matches requieran autenticación global
-            .requestMatchers("/api/usuarios/**").authenticated() 
+            // 2. Configuramos el CORS para que Angular pueda hablar con Spring Boot
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) 
             
-            // Cualquier otra petición necesitará estar logueado
-            .anyRequest().authenticated()
-        )
-        
-        // 4. Añadimos vuestro filtro de JWT para que lea la cabecera 'Authorization'
-        // (Asegúrate de que esta línea esté puesta para que Spring Security valide el token que envía Angular)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            // 3. Filtramos las rutas protegidas y públicas
+            .authorizeHttpRequests(auth -> auth
+                // 🔥 MODIFICADO: Permitimos el login, el registro y la ruta de /error sin necesidad de token
+                .requestMatchers("/api/auth/**", "/api/usuarios/registro", "/error").permitAll()
+                
+                // Las rutas de usuarios y matches requieren autenticación global
+                .requestMatchers("/api/usuarios/**").authenticated() 
+                
+                // Cualquier otra petición necesitará estar logueado
+                .anyRequest().authenticated()
+            )
+            
+            // 4. Añadimos el filtro de JWT para que lea la cabecera 'Authorization'
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-}
+        return http.build();
+    }
 
-
-    @org.springframework.context.annotation.Bean
+    @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = 
                 new org.springframework.web.cors.CorsConfiguration();
         
-        // 1. Ponemos la URL exacta de tu Angular explícitamente (NADA de asteriscos aquí si hay credentials)
+        // 1. URL exacta de tu Angular explícitamente
         configuration.setAllowedOrigins(java.util.List.of("http://localhost:4200")); 
         
         // 2. Autorizamos los métodos estándar
@@ -79,6 +77,4 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         
         return source;
     }
-
-    
 }

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +35,10 @@ public class Usuario {
 
     @Column(name = "objetivos")
     private String objetivos;
+    
+    // 🔥 NUEVO CAMPO: Para guardar el emoji del usuario
+    @Column(name = "avatar")
+    private String avatar;
 
     private Integer edad;
     private String genero;
@@ -45,6 +50,10 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario")
     private List<Disponibilidad> disponibilidades;
+
+    // 🔥 NUEVO: Relación con el historial de entrenamientos
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Entrenamiento> entrenamientos;
 
     // Constructor vacío obligatorio para que Hibernate funcione
     public Usuario() {}
@@ -74,27 +83,18 @@ public class Usuario {
     public Gimnasio getGimnasio() { return gimnasio; }
     public void setGimnasio(Gimnasio gimnasio) { this.gimnasio = gimnasio; }
 
-    public String getNivel() {
-        return nivel;
-    }
+    public String getNivel() { return nivel; }
+    public void setNivel(String nivel) { this.nivel = nivel; }
 
-    public void setNivel(String nivel) {
-        this.nivel = nivel;
-    }
+    public String getObjetivos() { return objetivos; }
+    public void setObjetivos(String objetivos) { this.objetivos = objetivos; }
+    
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 
-    public String getObjetivos() {
-        return objetivos;
-    }
+    public List<Disponibilidad> getDisponibilidades() { return disponibilidades; }
+    public void setDisponibilidades(List<Disponibilidad> disponibilidades) { this.disponibilidades = disponibilidades; }
 
-    public void setObjetivos(String objetivos) {
-        this.objetivos = objetivos;
-    }
-
-    public List<Disponibilidad> getDisponibilidades() {
-        return disponibilidades;
-    }
-
-    public void setDisponibilidades(List<Disponibilidad> disponibilidades) {
-        this.disponibilidades = disponibilidades;
-    }
+    public List<Entrenamiento> getEntrenamientos() { return entrenamientos; }
+    public void setEntrenamientos(List<Entrenamiento> entrenamientos) { this.entrenamientos = entrenamientos; }
 }
