@@ -22,8 +22,7 @@ export class AuthService {
             localStorage.setItem('usuario_nombre', response.nombre);
           }
 
-          // 👇 ESTA ES LA PIEZA QUE FALTABA DEL PUZZLE 👇
-          // Guardamos el ID del usuario. Comprobamos si tu backend lo llama "id" o "usuarioId"
+          // Guardamos el ID del usuario
           const userId = response.id || response.usuarioId; 
           if (userId) {
             localStorage.setItem('userId', userId.toString());
@@ -35,10 +34,16 @@ export class AuthService {
     );
   }
 
+  // 🔥 MODIFICADO: Ahora apunta al endpoint correcto del backend para registrar usuarios
+  // Fíjate en la última palabra de la URL (/registro)
+  register(nuevoUsuario: any): Observable<any> {
+    return this.http.post<any>('http://localhost:8080/api/usuarios/registro', nuevoUsuario);
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario_nombre');
-    localStorage.removeItem('userId'); // 👈 Limpiamos el ID al salir
+    localStorage.removeItem('userId'); 
     this.currentUserToken.set(null);
   }
 

@@ -10,8 +10,7 @@
     <h1 class="header__logo">Fit<span class="header__logo-accent">Connect</span></h1>
   </div>
   
-  <div class="header__right">
-    </div>
+  <div class="header__right"></div>
 </header>
 
 <div class="backdrop" [class.backdrop--show]="isSidebarOpen()" (click)="toggleSidebar()"></div>
@@ -38,20 +37,22 @@
   <hr class="sidebar__divider" />
 
   <nav class="sidebar__nav">
-    <a routerLink="/" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active" [routerLinkActiveOptions]="{exact: true}">
+    <a routerLink="/dashboard" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active" (click)="toggleSidebar()">
       <span class="sidebar__nav-icon">🏠</span> Dashboard
     </a>
-    <a routerLink="/explore" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active">
-      <span class="sidebar__nav-icon">🔍</span> Explorar Compañeros
+    
+    <a routerLink="/conexiones" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active" (click)="toggleSidebar()">
+      <span class="sidebar__nav-icon">🤝</span> Mis Compañeros
     </a>
-    <a href="#" class="sidebar__nav-item">
-      <span class="sidebar__nav-icon">👤</span> Mi Perfil
+
+    <a routerLink="/explore" class="sidebar__nav-item" routerLinkActive="sidebar__nav-item--active" (click)="toggleSidebar()">
+      <span class="sidebar__nav-icon">🔍</span> Explorar Compañeros
     </a>
   </nav>
 
   <div class="sidebar__footer">
-    <button class="sidebar__auth-button" (click)="toggleSession()">
-      {{ isLoggedIn() ? 'Cerrar Sesión' : 'Iniciar Sesión' }}
+    <button class="sidebar__auth-button" (click)="cerrarSesion()">
+      Cerrar Sesión
     </button>
   </div>
 </aside>

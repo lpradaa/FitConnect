@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioService {
-
-   // Ahora usamos DTOs para el registro
     UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO dto);
     Optional<Usuario> buscarPorEmail(String email);
     List<Usuario> obtenerTodosLosUsuarios();
