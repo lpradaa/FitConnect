@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Table;
 
 @Entity
@@ -50,6 +51,10 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Disponibilidad> disponibilidades;
 
+    // 🔥 NUEVO: Relación con el historial de entrenamientos
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Entrenamiento> entrenamientos;
+
     // Constructor vacío obligatorio para que Hibernate funcione
     public Usuario() {}
 
@@ -89,4 +94,7 @@ public class Usuario {
 
     public List<Disponibilidad> getDisponibilidades() { return disponibilidades; }
     public void setDisponibilidades(List<Disponibilidad> disponibilidades) { this.disponibilidades = disponibilidades; }
+
+    public List<Entrenamiento> getEntrenamientos() { return entrenamientos; }
+    public void setEntrenamientos(List<Entrenamiento> entrenamientos) { this.entrenamientos = entrenamientos; }
 }

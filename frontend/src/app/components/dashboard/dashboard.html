@@ -1,7 +1,7 @@
 <div class="dashboard">
   <section class="welcome-card">
     <div class="welcome-card__content">
-      <span class="welcome-card__badge">NIVEL AVANZADO</span>
+      <span class="welcome-card__badge">NIVEL {{ perfilForm.nivel | uppercase }}</span>
       <h2 class="welcome-card__title">¡A por todas, {{ userName() }}! 💪</h2>
       <p class="welcome-card__description">
         Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
@@ -26,58 +26,95 @@
     </div>
   </section>
 
-  <section class="matches-container" *ngIf="usuariosCompatibles && usuariosCompatibles.length > 0">
-    <h3 class="matches-container__title">Compañeros disponibles en tu gimnasio</h3>
+  <div class="dashboard-layout">
     
-    <div class="matches-grid">
-      <div class="match-card" *ngFor="let user of usuariosCompatibles">
+    <div class="main-column">
+      <section class="matches-container" *ngIf="usuariosCompatibles && usuariosCompatibles.length > 0">
+        <h3 class="matches-container__title">Compañeros disponibles en tu gimnasio</h3>
         
-        <div class="match-card__avatar">
-          <span>{{ user.avatar ? user.avatar : (user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U') }}</span>
-        </div>
+        <div class="matches-grid">
+          <div class="match-card" *ngFor="let user of usuariosCompatibles">
+            <div class="match-card__avatar">
+              <span>{{ user.avatar ? user.avatar : (user.nombre ? user.nombre.charAt(0).toUpperCase() : 'U') }}</span>
+            </div>
 
-        <div class="match-card__body">
-          <div class="match-card__header">
-            <h4>{{ user.nombre }}</h4>
-            <span class="badge" [className]="'badge badge--' + (user.nivel ? user.nivel.toLowerCase() : 'intermedio')">
-              {{ user.nivel || 'Intermedio' }}
-            </span>
+            <div class="match-card__body">
+              <div class="match-card__header">
+                <h4>{{ user.nombre }}</h4>
+                <span class="badge" [className]="'badge badge--' + (user.nivel ? user.nivel.toLowerCase() : 'intermedio')">
+                  {{ user.nivel || 'Intermedio' }}
+                </span>
+              </div>
+              
+              <p class="match-card__gym">
+                <span>📍</span> {{ user.gimnasio?.nombre || 'Gimnasio Habitual' }}
+              </p>
+            </div>
+
+            <div class="match-card__actions" style="display: flex; gap: 10px;">
+              <button *ngIf="!user.yaConectado"
+                class="match-card__btn" 
+                (click)="conectarConUsuario(user.id)"
+                [disabled]="user.solicitudPendiente"
+                [style.opacity]="user.solicitudPendiente ? 0.5 : 1">
+                {{ user.solicitudPendiente ? '⏳ Pendiente' : '👋 Conectar' }}
+              </button>
+              
+              <button *ngIf="user.yaConectado"
+                class="match-card__btn" 
+                style="background-color: #2ecc71; border-color: #2ecc71;" 
+                (click)="irAlChat(user.id)">
+                💬 Chatear
+              </button>
+            </div>
           </div>
-          
-          <p class="match-card__gym">
-            <span>📍</span> {{ user.gimnasio?.nombre || 'Gimnasio Habitual' }}
-          </p>
         </div>
+      </section>
+    </div>
 
-        <div class="match-card__actions" style="display: flex; gap: 10px;">
-          <button *ngIf="!user.yaConectado"
-            class="match-card__btn" 
-            (click)="conectarConUsuario(user.id)"
-            [disabled]="user.solicitudPendiente"
-            [style.opacity]="user.solicitudPendiente ? 0.5 : 1">
-            {{ user.solicitudPendiente ? '⏳ Pendiente' : '👋 Conectar' }}
-          </button>
-          
-          <button *ngIf="user.yaConectado"
-            class="match-card__btn" 
-            style="background-color: #2ecc71; border-color: #2ecc71;" 
-            (click)="irAlChat(user.id)">
-            💬 Chatear
-          </button>
+    <aside class="sidebar-column">
+      
+      <div class="profile-widget">
+        <div class="profile-widget__header">
+          <div class="avatar-giant">{{ perfilForm.avatar }}</div>
+          <h3>{{ userName() }}</h3>
+          <span class="goal-badge">{{ perfilForm.objetivos || 'Sin objetivo' }}</span>
+        </div>
+        <div class="profile-widget__stats">
+          <div class="stat"><span class="label">Nivel</span><span class="value">{{ perfilForm.nivel || '-' }}</span></div>
+          <div class="stat"><span class="label">Peso</span><span class="value">{{ perfilForm.peso ? perfilForm.peso + 'kg' : '-' }}</span></div>
+          <div class="stat"><span class="label">Edad</span><span class="value">{{ perfilForm.edad || '-' }}</span></div>
         </div>
       </div>
-    </div>
-  </section>
+
+      <div class="workouts-widget">
+        <div class="workouts-header">
+          <h3>Mi Actividad</h3>
+          <button class="add-workout-btn" (click)="abrirModalEntrenamiento()">+ Registrar</button>
+        </div>
+        
+        <div class="workout-timeline">
+          <div class="timeline-item" *ngFor="let ent of historialEntrenamientos">
+            <div class="timeline-icon">🔥</div>
+            <div class="timeline-content">
+              <strong>{{ ent.tipo }}</strong> ({{ ent.duracionMinutos }} min)
+              <span class="date">{{ ent.fecha }} • {{ ent.lugarONotas }}</span>
+            </div>
+          </div>
+          <p *ngIf="historialEntrenamientos.length === 0" class="empty-state">Aún no has registrado entrenamientos. ¡Empieza hoy!</p>
+        </div>
+      </div>
+
+    </aside>
+  </div>
 </div>
 
 <div class="modal-overlay" *ngIf="isModalOpen" (click)="cerrarModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    
     <div class="modal-header">
       <h2>⚙️ Editar Mi Perfil</h2>
       <button class="close-btn" (click)="cerrarModal()">✕</button>
     </div>
-
     <div class="modal-body">
       <div class="form-section">
         <h3>1. Elige tu Avatar</h3>
@@ -91,7 +128,6 @@
           </button>
         </div>
       </div>
-
       <div class="form-section">
         <h3>2. Datos Físicos y Objetivos</h3>
         <div class="form-grid">
@@ -118,13 +154,11 @@
           <div class="input-group"><label>ID Gimnasio</label><input type="number" [(ngModel)]="perfilForm.gimnasioId"></div>
         </div>
       </div>
-
       <div class="form-section">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3>3. Horarios de Entrenamiento</h3>
           <button class="add-btn" (click)="agregarHorario()">+ Añadir día</button>
         </div>
-        
         <div class="horario-row" *ngFor="let h of perfilForm.horarios; let i = index">
           <select [(ngModel)]="h.diaSemana">
             <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
@@ -136,13 +170,39 @@
         </div>
         <p *ngIf="perfilForm.horarios.length === 0" style="color: #64748b; font-size: 14px;">No tienes horarios añadidos. ¡Añade uno para encontrar matches!</p>
       </div>
-
     </div>
-
     <div class="modal-footer">
       <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
       <button class="btn-save" (click)="guardarPerfil()">Guardar Cambios</button>
     </div>
+  </div>
+</div>
 
+<div class="modal-overlay" *ngIf="isEntrenamientoModalOpen" (click)="cerrarModalEntrenamiento()">
+  <div class="modal-content" style="max-width: 400px;" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🏋️ Registrar Entrenamiento</h2>
+      <button class="close-btn" (click)="cerrarModalEntrenamiento()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group"><label>Fecha</label><input type="date" [(ngModel)]="nuevoEntrenamiento.fecha"></div>
+      <div class="input-group">
+        <label>Tipo de entrenamiento</label>
+        <select [(ngModel)]="nuevoEntrenamiento.tipo">
+          <option value="Fuerza (Torso)">Fuerza (Torso)</option>
+          <option value="Fuerza (Pierna)">Fuerza (Pierna)</option>
+          <option value="Fuerza (Fullbody)">Fuerza (Fullbody)</option>
+          <option value="Cardio LISS">Cardio LISS</option>
+          <option value="HIIT">HIIT</option>
+          <option value="Clase dirigida">Clase dirigida</option>
+        </select>
+      </div>
+      <div class="input-group"><label>Duración (Minutos)</label><input type="number" [(ngModel)]="nuevoEntrenamiento.duracionMinutos" placeholder="Ej: 60"></div>
+      <div class="input-group"><label>Notas o Gimnasio</label><input type="text" [(ngModel)]="nuevoEntrenamiento.lugarONotas" placeholder="Ej: Récord en prensa, molestias hombro..."></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cerrarModalEntrenamiento()">Cancelar</button>
+      <button class="btn-save" (click)="guardarEntrenamiento()">Guardar</button>
+    </div>
   </div>
 </div>

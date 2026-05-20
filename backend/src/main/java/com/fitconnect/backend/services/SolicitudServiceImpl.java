@@ -7,8 +7,11 @@ import com.fitconnect.backend.repositories.SolicitudRepository;
 import com.fitconnect.backend.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +52,7 @@ public class SolicitudServiceImpl implements SolicitudService {
             throw new IllegalArgumentException("No puedes enviarte una solicitud a ti mismo.");
         }
 
-        // 🔥 SOLUCIÓN: Usamos findFirstBy para evitar errores si en el futuro hay basura en la BD
+        // Usamos findFirstBy para evitar errores si en el futuro hay basura en la BD
         Optional<Solicitud> previaIda = solicitudRepository.findFirstByEmisorIdAndReceptorId(emisor.getId(), receptor.getId());
         Optional<Solicitud> previaVuelta = solicitudRepository.findFirstByEmisorIdAndReceptorId(receptor.getId(), emisor.getId());
         
@@ -115,15 +118,33 @@ public class SolicitudServiceImpl implements SolicitudService {
 
         List<Solicitud> solicitudesAceptadas = solicitudRepository.findAceptadasPorUsuario(usuario.getId());
 
-        return solicitudesAceptadas.stream()
-                .map(s -> new SolicitudDTO(
+        // 🔥 LA SOLUCIÓN AL MISTERIO DE LOS CLONES:
+        // Usamos un Set (conjunto) para ir recordando a qué compañeros hemos procesado ya.
+        Set<Long> idsCompañerosVistos = new HashSet<>();
+        List<SolicitudDTO> listaSinDuplicados = new ArrayList<>();
+
+        for (Solicitud s : solicitudesAceptadas) {
+            // 1. Averiguamos quién es "la otra persona" en esta solicitud (para no añadirnos a nosotros mismos)
+            Long idCompañero = s.getEmisor().getId().equals(usuario.getId()) 
+                    ? s.getReceptor().getId() 
+                    : s.getEmisor().getId();
+
+            // 2. Si es la primera vez que vemos a este compañero en el bucle, lo añadimos
+            if (!idsCompañerosVistos.contains(idCompañero)) {
+                idsCompañerosVistos.add(idCompañero); // Lo apuntamos en la libreta para no repetirlo
+                
+                // Lo convertimos a DTO y lo metemos en la lista final
+                listaSinDuplicados.add(new SolicitudDTO(
                         s.getId(),
                         s.getEmisor().getId(),
                         s.getEmisor().getNombre(),
                         s.getReceptor().getId(),
                         s.getReceptor().getNombre(),
                         s.getEstado()
-                ))
-                .collect(Collectors.toList());
+                ));
+            }
+        }
+
+        return listaSinDuplicados;
     }
 }

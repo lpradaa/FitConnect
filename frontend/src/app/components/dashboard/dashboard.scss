@@ -1,4 +1,5 @@
-@import '../../../scss/index';
+/* Usamos @use en lugar de @import para cumplir con las nuevas normas de Sass */
+@use '../../../scss/index' as *;
 
 .dashboard {
   padding: $space-lg;
@@ -91,7 +92,6 @@
     }
   }
 
-  /* NUEVO: Botón transparente secundario */
   &__button--outline {
     background-color: transparent;
     border: 2px solid white;
@@ -255,17 +255,11 @@
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
 
-    &:hover {
-      background-color: $accent; 
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
+    &:hover { background-color: $accent; }
+    &:active { transform: scale(0.98); }
   }
 }
 
-/* --- Variaciones de Badges por Niveles --- */
 .badge {
   padding: 4px $space-sm;
   border-radius: $radius-full;
@@ -273,22 +267,13 @@
   font-weight: $font-bold;
   text-transform: uppercase;
 
-  &--avanzado {
-    background-color: rgba($accent, 0.1);
-    color: $accent;
-  }
-  &--intermedio {
-    background-color: rgba(#4299e1, 0.1);
-    color: #4299e1;
-  }
-  &--principiante {
-    background-color: rgba(#ed8936, 0.1);
-    color: #ed8936;
-  }
+  &--avanzado { background-color: rgba($accent, 0.1); color: $accent; }
+  &--intermedio { background-color: rgba(#4299e1, 0.1); color: #4299e1; }
+  &--principiante { background-color: rgba(#ed8936, 0.1); color: #ed8936; }
 }
 
 /* =========================================
-   NUEVO: ESTILOS DEL MODAL DE PERFIL
+   ESTILOS DE LOS MODALES
    ========================================= */
 
 .modal-overlay {
@@ -345,7 +330,6 @@
   h3 { margin: 0 0 $space-sm 0; font-size: $text-base; color: $text-main; border-bottom: 2px solid $border; padding-bottom: 5px;}
 }
 
-/* Emoji Picker */
 .avatar-preview { font-size: 14px; margin-bottom: 10px; span { font-size: 24px; vertical-align: middle;} }
 .emoji-grid {
   display: flex; flex-wrap: wrap; gap: 10px;
@@ -356,10 +340,10 @@
   }
 }
 
-/* Formularios Grid */
 .form-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: $space-md;
 }
+
 .input-group {
   display: flex; flex-direction: column; gap: 5px;
   label { font-size: $text-sm; font-weight: $font-semibold; color: $text-main; }
@@ -369,7 +353,6 @@
   }
 }
 
-/* Horarios */
 .add-btn { background: #e0f2fe; color: #0284c7; border: none; padding: 5px 10px; border-radius: $radius-sm; cursor: pointer; font-weight: bold;}
 .horario-row {
   display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
@@ -381,4 +364,137 @@
   padding: $space-md $space-lg; border-top: 1px solid $border; display: flex; justify-content: flex-end; gap: $space-md; background: #f8fafc; border-radius: 0 0 $radius-lg $radius-lg;
   .btn-cancel { padding: 10px 20px; background: transparent; border: 1px solid $border; border-radius: $radius-md; cursor: pointer; font-weight: bold; color: $text-muted;}
   .btn-save { padding: 10px 20px; background: $accent; color: white; border: none; border-radius: $radius-md; cursor: pointer; font-weight: bold; }
+}
+
+/* =========================================
+   NUEVO: LAYOUT A DOS COLUMNAS
+   ========================================= */
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-xl;
+  margin-top: $space-xl;
+
+  @include tablet {
+    grid-template-columns: 2fr 1fr; 
+    align-items: start;
+  }
+}
+
+.main-column {
+  .matches-container { margin-top: 0; }
+}
+
+.sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+/* --- WIDGET PERFIL --- */
+.profile-widget {
+  background: white;
+  border-radius: $radius-lg;
+  border: 1px solid $border;
+  padding: $space-xl $space-md;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: $space-lg;
+
+    .avatar-giant {
+      font-size: 70px;
+      line-height: 1;
+      background: #f8fafc;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 3px solid #e2e8f0;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    h3 { margin: 0; font-size: $text-2xl; color: $text-main; font-weight: $font-extrabold; }
+    
+    .goal-badge {
+      background: rgba($accent, 0.1);
+      color: $accent;
+      padding: 4px 12px;
+      border-radius: $radius-full;
+      font-size: $text-xs;
+      font-weight: $font-bold;
+      text-transform: uppercase;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid $border;
+    padding-top: $space-md;
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      
+      .label { font-size: 11px; color: $text-muted; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;}
+      .value { font-size: $text-base; color: $text-main; font-weight: $font-extrabold; }    }
+  }
+}
+
+/* --- WIDGET ENTRENAMIENTOS --- */
+.workouts-widget {
+  background: white;
+  border-radius: $radius-lg;
+  border: 1px solid $border;
+  padding: $space-md;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+
+  .workouts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $space-md;
+    border-bottom: 1px solid $border;
+    padding-bottom: $space-sm;
+    
+    h3 { margin: 0; font-size: $text-lg; font-weight: $font-bold; color: $text-main; }
+    .add-workout-btn {
+      background: #e0f2fe; color: #0284c7; border: none; padding: 6px 12px; border-radius: $radius-md; font-weight: bold; cursor: pointer; transition: 0.2s;
+      &:hover { background: #bae6fd; }
+    }
+  }
+
+  .workout-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      
+      .timeline-icon { background: #fff7ed; padding: 10px; border-radius: 50%; font-size: 18px; }
+      .timeline-content {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        color: $text-main;
+        
+        strong { font-weight: 700; }
+        .date { font-size: 12px; color: $text-muted; }
+      }
+    }
+    .empty-state { font-size: 13px; color: $text-muted; text-align: center; font-style: italic; }
+  }
 }

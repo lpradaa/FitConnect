@@ -3,6 +3,7 @@ package com.fitconnect.backend.controllers;
 import com.fitconnect.backend.dtos.UsuarioPerfilDTO;
 import com.fitconnect.backend.dtos.UsuarioRegistroDTO;
 import com.fitconnect.backend.dtos.UsuarioResponseDTO;
+import com.fitconnect.backend.models.Usuario;
 import com.fitconnect.backend.services.UsuarioService;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class UsuarioController {
         }
     }
 
-/**
+    /**
      * Endpoint para Actualizar Perfil
      * PUT http://localhost:8080/api/usuarios/perfil
      */
@@ -59,6 +60,35 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error inesperado al actualizar el perfil.");
+        }
+    }
+
+    /**
+     * 🔥 NUEVO: Endpoint para Obtener Mis Datos Reales
+     * GET http://localhost:8080/api/usuarios/perfil
+     */
+    @GetMapping("/perfil")
+    public ResponseEntity<?> obtenerMiPerfil() {
+        try {
+            String emailLogueado = SecurityContextHolder.getContext().getAuthentication().getName();
+            Usuario usuario = usuarioService.buscarPorEmail(emailLogueado)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                    
+            UsuarioResponseDTO dto = new UsuarioResponseDTO(
+                    usuario.getId(), 
+                    usuario.getNombre(), 
+                    usuario.getEmail(), 
+                    usuario.getEdad(), 
+                    usuario.getGenero(), 
+                    usuario.getPeso(), 
+                    usuario.getNivel(), 
+                    usuario.getObjetivos(), 
+                    usuario.getGimnasio() != null ? usuario.getGimnasio().getId() : null,
+                    usuario.getAvatar() // 🔥 Enviamos el avatar a Angular
+            );
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener el perfil: " + e.getMessage());
         }
     }
 
@@ -85,5 +115,4 @@ public class UsuarioController {
             return ResponseEntity.internalServerError().body("Error al buscar compañeros.");
         }
     }
-
 }

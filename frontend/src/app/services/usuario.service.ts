@@ -9,6 +9,7 @@ export class UsuarioService {
   // URLs de tu backend en Spring Boot
   private apiUrlUsuarios = 'http://localhost:8080/api/usuarios';
   private apiUrlSolicitudes = 'http://localhost:8080/api/solicitudes';
+  private apiUrlEntrenamientos = 'http://localhost:8080/api/entrenamientos';
 
   constructor(private http: HttpClient) {}
 
@@ -47,12 +48,30 @@ export class UsuarioService {
     return this.http.get<any[]>(`${this.apiUrlSolicitudes}/aceptadas`, { headers });
   }
 
-  // 🔥 NUEVO: 6. Actualizar el perfil del usuario (Avatar, Datos y Horarios)
+  // 6. Actualizar el perfil del usuario (Avatar, Datos y Horarios)
   actualizarPerfil(perfilData: any): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
-    // Nota: Asumo que en tu backend el endpoint es PUT /api/usuarios/perfil
-    // Si tu ruta es distinta (ej: /api/usuarios/actualizar), cámbiala aquí
     return this.http.put<any>(`${this.apiUrlUsuarios}/perfil`, perfilData, { headers });
   }
+
+  // 🔥 NUEVO: 7. Obtener mi perfil real (incluyendo el Avatar)
+  getMiPerfil(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.get<any>(`${this.apiUrlUsuarios}/perfil`, { headers });
+  }
+
+registrarEntrenamiento(data: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.post<any>(this.apiUrlEntrenamientos, data, { headers });
+  }
+
+  getMisEntrenamientos(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.get<any[]>(this.apiUrlEntrenamientos, { headers });
+  }
+
 }
