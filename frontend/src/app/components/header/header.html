@@ -7,7 +7,29 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
     </button>
-    <h1 class="header__logo">Fit<span class="header__logo-accent">Connect</span></h1>
+    
+    <a routerLink="/" class="header__logo-container">
+       <svg viewBox="0 0 250 50" class="logo-svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+              <linearGradient id="fitGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4ade80" />
+                  <stop offset="100%" stop-color="#16a34a" />
+              </linearGradient>
+              <linearGradient id="fitGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2dd4bf" />
+                  <stop offset="100%" stop-color="#0f766e" />
+              </linearGradient>
+          </defs>
+          <g>
+              <circle cx="25" cy="25" r="20" fill="url(#fitGrad1)" opacity="0.9"/>
+              <circle cx="43" cy="25" r="20" fill="url(#fitGrad2)" opacity="0.9"/>
+              <path d="M 37 14 L 26 27 L 32 27 L 29 38 L 43 23 L 35 23 Z" fill="#ffffff" />
+          </g>
+          <text x="75" y="27" font-family="'Inter', system-ui, sans-serif" font-size="28" font-weight="800" fill="#4ade80" dominant-baseline="middle">
+              Fit<tspan fill="#4ade80" font-weight="500">Connect</tspan>
+          </text>
+      </svg>
+    </a>
   </div>
   
   <div class="header__right"></div>
