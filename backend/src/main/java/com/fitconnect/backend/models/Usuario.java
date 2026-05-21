@@ -43,6 +43,8 @@ public class Usuario {
     private Integer edad;
     private String genero;
     private Float peso;
+    private String biografia;
+
     
     @ManyToOne
     @JoinColumn(name = "gimnasio_id")
@@ -97,4 +99,12 @@ public class Usuario {
 
     public List<Entrenamiento> getEntrenamientos() { return entrenamientos; }
     public void setEntrenamientos(List<Entrenamiento> entrenamientos) { this.entrenamientos = entrenamientos; }
+
+    public String getBiografia() {
+        return biografia;
+    }
+
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
+    }
 }

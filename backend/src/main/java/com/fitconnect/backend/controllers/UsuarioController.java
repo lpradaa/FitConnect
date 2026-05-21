@@ -106,4 +106,21 @@ public class UsuarioController {
             return ResponseEntity.internalServerError().body("Error al buscar compañeros.");
         }
     }
+
+    /**
+     * 🔥 NUEVO: Explorar Comunidad (Modo Tinder)
+     * GET http://localhost:8080/api/usuarios/explorar
+     */
+    @GetMapping("/explorar")
+    public ResponseEntity<?> explorarComunidad() {
+        try {
+            String emailLogueado = SecurityContextHolder.getContext().getAuthentication().getName();
+            List<UsuarioResponseDTO> comunidad = usuarioService.explorarComunidad(emailLogueado);
+            return ResponseEntity.ok(comunidad);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error al cargar la comunidad.");
+        }
+    }
+
+    
 }

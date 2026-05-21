@@ -14,6 +14,6 @@ public interface UsuarioService {
     List<Usuario> obtenerTodosLosUsuarios();
     UsuarioResponseDTO actualizarPerfil(String email, UsuarioPerfilDTO dto);
     List<UsuarioResponseDTO> buscarCompañeros(String email);
-    
+    List<UsuarioResponseDTO> explorarComunidad(String email);
     Map<String, Object> obtenerMiPerfilCompleto(String email);
 }

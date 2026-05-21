@@ -104,16 +104,17 @@ public class UsuarioServiceImpl implements UsuarioService {
             }
         }
 
+        // 🔥 EXTRAE EL NOMBRE DEL GIMNASIO AQUÍ
         return new UsuarioResponseDTO(
                 guardado.getId(), guardado.getNombre(), guardado.getEmail(),
                 guardado.getEdad(), guardado.getGenero(), guardado.getPeso(),
                 guardado.getNivel(), guardado.getObjetivos(),
                 guardado.getGimnasio() != null ? guardado.getGimnasio().getId() : null,
-                guardado.getAvatar()
+                guardado.getAvatar(), guardado.getBiografia(),
+                guardado.getGimnasio() != null ? guardado.getGimnasio().getNombre() : "Gimnasio Habitual"
         );
     }
 
-    // 🔥 NUEVO: Construye un diccionario con los datos del usuario y le suma sus horarios
     @Override
     public Map<String, Object> obtenerMiPerfilCompleto(String email) {
         Usuario usuario = usuarioRepository.findByEmail(email)
@@ -131,12 +132,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         perfil.put("gimnasioId", usuario.getGimnasio() != null ? usuario.getGimnasio().getId() : null);
         perfil.put("avatar", usuario.getAvatar());
 
-        // Buscamos los horarios de este usuario en la BD y los pasamos al formato que lee Angular
         List<UsuarioPerfilDTO.HorarioDTO> horarios = disponibilidadRepository.findByUsuarioId(usuario.getId())
                 .stream().map(d -> {
                     UsuarioPerfilDTO.HorarioDTO h = new UsuarioPerfilDTO.HorarioDTO();
                     h.setDiaSemana(d.getDiaSemana());
-                    h.setHoraInicio(d.getHoraInicio().toString()); // Pasa de LocalTime a String "10:30"
+                    h.setHoraInicio(d.getHoraInicio().toString()); 
                     h.setHoraFin(d.getHoraFin().toString());
                     return h;
                 }).collect(Collectors.toList());
@@ -152,12 +152,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         List<Usuario> matches = usuarioRepository.buscarMatches(miUsuario.getGimnasio().getId(), miUsuario.getId(), miUsuario.getNivel());
 
         return matches.stream().map(u -> {
+            // 🔥 EXTRAE EL NOMBRE DEL GIMNASIO AQUÍ
             UsuarioResponseDTO dto = new UsuarioResponseDTO(
                 u.getId(), u.getNombre(), u.getEmail(), 
                 u.getEdad(), u.getGenero(), u.getPeso(), 
                 u.getNivel(), u.getObjetivos(), 
                 u.getGimnasio() != null ? u.getGimnasio().getId() : null,
-                u.getAvatar() 
+                u.getAvatar(), u.getBiografia(),
+                u.getGimnasio() != null ? u.getGimnasio().getNombre() : "Gimnasio Habitual"
             );
             
             Optional<Solicitud> ida = solicitudRepository.findFirstByEmisorIdAndReceptorId(miUsuario.getId(), u.getId());
@@ -170,5 +172,28 @@ public class UsuarioServiceImpl implements UsuarioService {
             }
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UsuarioResponseDTO> explorarComunidad(String email) {
+        Usuario miUsuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        List<Usuario> todosMenosYo = usuarioRepository.findByIdNot(miUsuario.getId());
+
+        return todosMenosYo.stream().filter(u -> {
+            boolean hayIda = solicitudRepository.findFirstByEmisorIdAndReceptorId(miUsuario.getId(), u.getId()).isPresent();
+            boolean hayVuelta = solicitudRepository.findFirstByEmisorIdAndReceptorId(u.getId(), miUsuario.getId()).isPresent();
+            
+            return !hayIda && !hayVuelta;
+            
+        }).map(u -> new UsuarioResponseDTO(
+            u.getId(), u.getNombre(), u.getEmail(), 
+            u.getEdad(), u.getGenero(), u.getPeso(), 
+            u.getNivel(), u.getObjetivos(), 
+            u.getGimnasio() != null ? u.getGimnasio().getId() : null,
+            u.getAvatar(), u.getBiografia(),
+            u.getGimnasio() != null ? u.getGimnasio().getNombre() : "Gimnasio Habitual" // 🔥 EXTRAE EL NOMBRE DEL GIMNASIO AQUÍ
+        )).collect(Collectors.toList());
     }
 }

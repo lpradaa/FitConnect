@@ -234,9 +234,8 @@
 }
 
 /* =========================================
-   ESTILOS DE LOS MODALES
+   ESTILOS DE LOS MODALES BÁSICOS
    ========================================= */
-
 .modal-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px);
 }
@@ -269,7 +268,6 @@
 /* =========================================
    LAYOUT A DOS COLUMNAS
    ========================================= */
-
 .dashboard-layout {
   display: grid; grid-template-columns: 1fr; gap: $space-xl; margin-top: $space-xl;
   @include tablet { grid-template-columns: 2fr 1fr; align-items: start; }
@@ -277,96 +275,47 @@
 
 .sidebar-column { display: flex; flex-direction: column; gap: $space-lg; }
 
-/* 🔥 NUEVO: WIDGET NOTIFICACIONES */
 .notifications-widget {
-  background: white;
-  border-radius: $radius-lg;
-  border: 2px solid $accent; /* Destaca con el color principal */
-  padding: $space-md;
-  box-shadow: 0 10px 25px rgba($accent, 0.15);
-
+  background: white; border-radius: $radius-lg; border: 2px solid $accent; padding: $space-md; box-shadow: 0 10px 25px rgba($accent, 0.15);
   .notifications-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: $space-md;
-
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: $space-md;
     h3 { margin: 0; font-size: $text-base; color: $text-main; font-weight: $font-bold; }
-    
-    .notifications-count {
-      background: $accent;
-      color: white;
-      padding: 2px 8px;
-      border-radius: $radius-full;
-      font-size: 12px;
-      font-weight: bold;
-    }
+    .notifications-count { background: $accent; color: white; padding: 2px 8px; border-radius: $radius-full; font-size: 12px; font-weight: bold; }
   }
-
-  .request-list {
-    display: flex; flex-direction: column; gap: 10px;
-  }
-
+  .request-list { display: flex; flex-direction: column; gap: 10px; }
   .request-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8fafc;
-    padding: 12px;
-    border-radius: $radius-md;
-    border: 1px solid $border;
-
-    .request-info {
-      font-size: 13px;
-      color: $text-main;
-      strong { font-weight: bold; }
-    }
-
+    display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: $radius-md; border: 1px solid $border;
+    .request-info { font-size: 13px; color: $text-main; strong { font-weight: bold; } }
     .request-actions {
       display: flex; gap: 8px;
-
-      button {
-        border: none;
-        padding: 6px 10px;
-        border-radius: $radius-sm;
-        cursor: pointer;
-        transition: transform 0.1s;
-        &:hover { transform: scale(1.1); }
-      }
+      button { border: none; padding: 6px 10px; border-radius: $radius-sm; cursor: pointer; transition: transform 0.1s; &:hover { transform: scale(1.1); } }
       .btn-accept { background: #dcfce7; color: #166534; }
       .btn-reject { background: #fee2e2; color: #991b1b; }
     }
   }
 }
 
-/* --- WIDGET PERFIL --- */
 .profile-widget {
   background: white; border-radius: $radius-lg; border: 1px solid $border; padding: $space-xl $space-md; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-
   &__header {
     display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: $space-lg;
-
     .avatar-giant { font-size: 70px; line-height: 1; background: #f8fafc; width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; border-radius: 50%; border: 3px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     h3 { margin: 0; font-size: $text-2xl; color: $text-main; font-weight: $font-extrabold; }
     .goal-badge { background: rgba($accent, 0.1); color: $accent; padding: 4px 12px; border-radius: $radius-full; font-size: $text-xs; font-weight: $font-bold; text-transform: uppercase; }
   }
-
   &__stats {
     display: flex; justify-content: space-around; border-top: 1px solid $border; padding-top: $space-md;
     .stat { display: flex; flex-direction: column; gap: 4px; .label { font-size: 11px; color: $text-muted; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold;} .value { font-size: $text-base; color: $text-main; font-weight: $font-extrabold; } }
   }
 }
 
-/* --- WIDGET ENTRENAMIENTOS --- */
 .workouts-widget {
   background: white; border-radius: $radius-lg; border: 1px solid $border; padding: $space-md; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-
   .workouts-header {
     display: flex; justify-content: space-between; align-items: center; margin-bottom: $space-md; border-bottom: 1px solid $border; padding-bottom: $space-sm;
     h3 { margin: 0; font-size: $text-lg; font-weight: $font-bold; color: $text-main; }
     .add-workout-btn { background: #e0f2fe; color: #0284c7; border: none; padding: 6px 12px; border-radius: $radius-md; font-weight: bold; cursor: pointer; transition: 0.2s; &:hover { background: #bae6fd; } }
   }
-
   .workout-timeline {
     display: flex; flex-direction: column; gap: 15px;
     .timeline-item {
@@ -375,5 +324,160 @@
       .timeline-content { display: flex; flex-direction: column; font-size: 14px; color: $text-main; strong { font-weight: 700; } .date { font-size: 12px; color: $text-muted; } }
     }
     .empty-state { font-size: 13px; color: $text-muted; text-align: center; font-style: italic; }
+  }
+}
+
+/* =========================================
+   🔥 MODAL TOP MATCH (EL EFECTO WOW)
+   ========================================= */
+.top-match-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 2000; display: flex; justify-content: center; align-items: center; animation: fadeInOverlay 0.4s ease-out;
+}
+
+.top-match-content {
+  background: white; width: 90%; max-width: 450px; border-radius: 24px; padding: 40px 30px; text-align: center; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden;
+}
+
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+.close-btn-absolute {
+  position: absolute; top: 15px; right: 20px; background: rgba(0,0,0,0.05); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; color: $text-muted; transition: 0.2s; &:hover { background: rgba(0,0,0,0.1); color: $text-main; transform: rotate(90deg); }
+}
+
+.calculating-state {
+  display: flex; flex-direction: column; align-items: center; gap: 15px;
+  h3 { color: $text-main; font-size: 1.5rem; margin: 10px 0 0; }
+  p { color: $text-muted; font-size: 0.95rem; line-height: 1.5; margin: 0; }
+}
+
+.radar-spinner {
+  width: 80px; height: 80px; border-radius: 50%; border: 4px solid rgba($accent, 0.2); border-top-color: $accent; animation: spin 1s infinite linear, pulseGlow 2s infinite ease-in-out; margin-bottom: 10px;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes pulseGlow { 50% { box-shadow: 0 0 20px rgba($accent, 0.5); } }
+
+.match-found-state {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+
+  .match-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; padding: 6px 16px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+
+  .match-avatar-glow {
+    width: 100px; height: 100px; background: #f8fafc; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 50px; position: relative; border: 4px solid white; box-shadow: 0 0 0 4px $accent, 0 10px 25px rgba($accent, 0.4); margin: 10px 0; animation: float 3s ease-in-out infinite; color: $text-main;
+  }
+
+  h2 { margin: 0; font-size: 1.8rem; font-weight: 800; color: $text-main; }
+
+  .match-reasons {
+    background: #f8fafc; width: 100%; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; gap: 10px; border: 1px solid $border;
+    .reason-item { font-size: 14px; color: $text-main; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  }
+
+  .btn-connect-giant {
+    width: 100%; padding: 16px; border-radius: 16px; background: linear-gradient(135deg, $accent, darken($accent, 10%)); color: white; border: none; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba($accent, 0.3); transition: 0.2s;
+    &:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba($accent, 0.4); }
+    &:active { transform: translateY(1px); }
+  }
+}
+
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
+.no-match-state {
+  display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px 0;
+  .empty-icon { font-size: 4rem; margin-bottom: 10px; }
+  h2 { color: $text-main; margin: 0; font-size: 1.5rem; }
+  p { color: $text-muted; font-size: 14px; line-height: 1.5; margin-bottom: 10px;}
+  .btn-cancel-giant { width: 100%; padding: 14px; border-radius: 12px; background: #f1f5f9; color: $text-main; border: none; font-weight: bold; cursor: pointer; &:hover { background: #e2e8f0; } }
+}
+
+/* =========================================
+   🔥 FLECHAS NAVEGACIÓN MODAL TOP MATCH
+   ========================================= */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: $text-main;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  z-index: 10;
+
+  &:hover {
+    background: $accent;
+    color: white;
+    border-color: $accent;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  &:active { 
+    transform: translateY(-50%) scale(0.95); 
+  }
+
+  svg { 
+    width: 22px; 
+    height: 22px; 
+  }
+
+  &--left { left: 15px; }
+  &--right { right: 15px; }
+}
+
+/* 🔥 Corrección de z-index para evitar bloqueos de modales ocultos */
+.modal-overlay, .top-match-overlay {
+  &[style*="display: none"] { pointer-events: none; }
+  pointer-events: auto;
+}
+
+/* =========================================
+   🍞 TOAST NOTIFICATIONS
+   ========================================= */
+.custom-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: white;
+  border-left: 5px solid #10b981; /* Verde de éxito por defecto */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 16px 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 9999; /* Por encima de TODO */
+  
+  /* Animación inicial oculta */
+  transform: translateY(100px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efecto rebote */
+
+  &.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.error {
+    border-left-color: #ef4444; /* Rojo para errores */
+  }
+
+  .toast-icon {
+    font-size: 1.5rem;
+  }
+
+  .toast-message {
+    color: #1f2937;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0;
   }
 }

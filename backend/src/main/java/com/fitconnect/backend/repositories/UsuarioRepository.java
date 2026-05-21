@@ -16,16 +16,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     // 🔥 SOLUCIÓN DEFINITIVA EN JPQL (Carga los objetos anidados como Gimnasio correctamente)
     @Query("SELECT DISTINCT u FROM Usuario u " +
-           "JOIN u.disponibilidades d1 " +
-           "JOIN Disponibilidad d2 ON d1.diaSemana = d2.diaSemana " +
            "WHERE u.gimnasio.id = :gimId " +
            "AND u.id != :miId " +
            "AND u.nivel = :miNivel " +
-           "AND d2.usuario.id = :miId " +
-           "AND cast(d1.horaInicio as time) < cast(d2.horaFin as time) " +
-           "AND cast(d1.horaFin as time) > cast(d2.horaInicio as time)")
+           "AND u.id NOT IN (SELECT s.emisor.id FROM Solicitud s WHERE s.receptor.id = :miId) " +
+           "AND u.id NOT IN (SELECT s.receptor.id FROM Solicitud s WHERE s.emisor.id = :miId)")
     List<Usuario> buscarMatches(@Param("gimId") Long gimId, 
                                 @Param("miId") Long miId, 
                                 @Param("miNivel") String miNivel);
+
+       // 🔥 NUEVO: Devuelve a todos los usuarios menos al que está logueado
+    List<Usuario> findByIdNot(Long id);
     
 }

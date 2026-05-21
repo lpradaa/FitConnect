@@ -62,7 +62,7 @@ export class UsuarioService {
     return this.http.get<any>(`${this.apiUrlUsuarios}/perfil`, { headers });
   }
 
-registrarEntrenamiento(data: any): Observable<any> {
+  registrarEntrenamiento(data: any): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return this.http.post<any>(this.apiUrlEntrenamientos, data, { headers });
@@ -73,5 +73,16 @@ registrarEntrenamiento(data: any): Observable<any> {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return this.http.get<any[]>(this.apiUrlEntrenamientos, { headers });
   }
+
+  getExplorarUsuarios(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.get<any[]>(`${this.apiUrlUsuarios}/explorar`, { headers });
+  }
+
+  
+getGimnasios(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrlUsuarios}/gimnasios`);
+}
 
 }

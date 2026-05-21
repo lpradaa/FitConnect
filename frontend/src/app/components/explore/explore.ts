@@ -1,67 +1,111 @@
-import { Component, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common'; // 🔥 Añadido
-import { RouterModule } from '@angular/router'; // 🔥 Añadido
+import { Component, signal, computed, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-explore',
-  standalone: true, // Asegúrate de que ponga standalone: true
-  imports: [CommonModule, RouterModule], // 🔥 Añadidos aquí
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './explore.html',
   styleUrl: './explore.scss'
 })
+export class Explore implements OnInit {
+  private usuarioService = inject(UsuarioService);
+  private cdr = inject(ChangeDetectorRef); // 🔥 Inyectado para forzar el repintado de la vista
 
-export class Explore {
-  // Datos base de Luis para comparar
-  currentUser = signal({
-    gym: 'Basic-Fit Sur',
-    level: 'Avanzado',
-    focus: 'Fuerza',
-    time: 'Tardes'
+  usuarios = signal<any[]>([]); 
+  isFiltrosOpen = signal(false);
+
+  // 🔥 Filtros avanzados ampliados
+  filtrosActivos = signal({ 
+    busqueda: '', 
+    nivel: '', 
+    objetivo: '',
+    gimnasio: '',
+    genero: '',
+    edadMin: null as number | null,
+    edadMax: null as number | null
   });
 
-  // Base de datos simulada
-  allUsersFromDB = signal([
-    { 
-      id: 1, name: 'Ana Gómez', initial: 'A', gym: 'Basic-Fit Sur', 
-      level: 'Avanzada', focus: 'Fuerza', time: 'Tardes', 
-      bio: '"Llevo 3 años entrenando powerlifting. Busco un spotter de confianza para tirar máximas en press banca y sentadilla."' 
-    },
-    { 
-      id: 2, name: 'Carlos Ruiz', initial: 'C', gym: 'Basic-Fit Centro', 
-      level: 'Principiante', focus: 'Pérdida peso', time: 'Mañanas', 
-      bio: '"Acabo de empezar. Me da un poco de vergüenza ir a la zona de pesas libres, busco alguien para aprender juntos."' 
-    },
-    { 
-      id: 3, name: 'Laura Martín', initial: 'L', gym: 'McFit Norte', 
-      level: 'Intermedio', focus: 'Hipertrofia', time: 'Tardes', 
-      bio: '"Rutina dividida 4 días a la semana. Muy constante y enfocada en mejorar la técnica."' 
-    },
-    { 
-      id: 4, name: 'David Torres', initial: 'D', gym: 'Basic-Fit Sur', 
-      level: 'Avanzado', focus: 'Fuerza', time: 'Mediodía', 
-      bio: '"Entrenamientos intensos y cortos. Si buscas charlar entre series, no soy tu chico. A darle duro."' 
-    }
-  ]);
+  // 🔥 VARIABLES PARA EL TOAST NOTIFICATION
+  toast: { show: boolean, message: string, type: 'success' | 'error' } = { show: false, message: '', type: 'success' };
+  private toastTimeout: any;
 
-  // Filtros rápidos (por ahora visuales)
-  filters = signal(['Todos', 'Basic-Fit Sur', 'Avanzados', 'Tardes']);
-  activeFilter = signal('Todos');
+  // 🔥 Extraemos los gimnasios únicos de la base de datos para el filtro
+  gimnasiosDisponibles = computed(() => {
+    const gyms = this.usuarios()
+      .map(u => u.gimnasioNombre)
+      .filter(gym => gym); // Quitamos los nulos
+    return [...new Set(gyms)]; // Filtramos para que no salgan repetidos
+  });
 
-  // Algoritmo: Ordena de más afín a menos afín
-  sortedUsers = computed(() => {
-    const current = this.currentUser();
-    const evaluated = this.allUsersFromDB().map(user => {
-      let coincidences = 0;
-      if (user.gym === current.gym) coincidences++;
-      // Comprobamos si incluye la raíz para que 'Avanzado' y 'Avanzada' hagan match
-      if (user.level.includes('Avanzad') && current.level.includes('Avanzad')) coincidences++; 
-      if (user.focus === current.focus) coincidences++;
-      if (user.time === current.time) coincidences++;
-      
-      return { ...user, coincidences };
+  usuariosFiltrados = computed(() => {
+    let list = this.usuarios();
+    const f = this.filtrosActivos();
+    
+    // Búsqueda por texto
+    if (f.busqueda.trim()) list = list.filter(u => u.nombre.toLowerCase().includes(f.busqueda.toLowerCase()));
+    
+    // Selectores exactos
+    if (f.nivel) list = list.filter(u => u.nivel === f.nivel);
+    if (f.objetivo) list = list.filter(u => u.objetivos === f.objetivo);
+    if (f.gimnasio) list = list.filter(u => u.gimnasioNombre === f.gimnasio);
+    if (f.genero) list = list.filter(u => u.genero === f.genero);
+    
+    // Rango de edades
+    if (f.edadMin !== null && f.edadMin > 0) list = list.filter(u => u.edad >= f.edadMin!);
+    if (f.edadMax !== null && f.edadMax > 0) list = list.filter(u => u.edad <= f.edadMax!);
+    
+    return list;
+  });
+
+  ngOnInit() { this.cargarComunidad(); }
+
+  // 🔥 FUNCIÓN PARA MOSTRAR EL TOAST (Reemplaza a los alert)
+  mostrarToast(mensaje: string, tipo: 'success' | 'error' = 'success') {
+    this.toast = { show: true, message: mensaje, type: tipo };
+    if (this.cdr) this.cdr.detectChanges();
+
+    if (this.toastTimeout) clearTimeout(this.toastTimeout);
+    
+    this.toastTimeout = setTimeout(() => {
+      this.toast.show = false;
+      if (this.cdr) this.cdr.detectChanges();
+    }, 3000); 
+  }
+
+  cargarComunidad() {
+    this.usuarioService.getExplorarUsuarios().subscribe({
+      next: (data) => this.usuarios.set(data),
+      error: (err) => console.error('Error cargando usuarios:', err)
     });
+  }
 
-    // Ordenamos descendente (el que tenga más coincidencias va primero)
-    return evaluated.sort((a, b) => b.coincidences - a.coincidences);
-  });
+  toggleFiltros() { this.isFiltrosOpen.update(v => !v); }
+  
+  actualizarFiltros(campo: string, evento: any) {
+    const valor = evento.target ? evento.target.value : evento;
+    this.filtrosActivos.update(f => ({ ...f, [campo]: valor }));
+  }
+
+  resetearFiltros() {
+    this.filtrosActivos.set({ 
+      busqueda: '', nivel: '', objetivo: '', 
+      gimnasio: '', genero: '', edadMin: null, edadMax: null 
+    });
+  }
+
+  conectarConUsuario(id: number) {
+    this.usuarioService.enviarSolicitudConexion(id).subscribe({
+      next: () => {
+        this.mostrarToast('¡Solicitud enviada con éxito!', 'success'); // 🔥 Usamos el toast
+        this.usuarios.update(list => list.filter(u => u.id !== id));
+      },
+      error: (err) => {
+        console.error(err);
+        this.mostrarToast('Hubo un problema al conectar con el usuario.', 'error'); // 🔥 Usamos el toast
+      }
+    });
+  }
 }

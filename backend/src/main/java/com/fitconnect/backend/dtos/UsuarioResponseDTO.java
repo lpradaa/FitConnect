@@ -10,7 +10,10 @@ public class UsuarioResponseDTO {
     private String nivel;
     private String objetivos;
     private Long gimnasioId;
+    private String biografia;
+    private String gimnasioNombre;
     
+   
     // 🔥 NUEVO CAMPO: Para enviar el emoji al frontend
     private String avatar;
 
@@ -28,7 +31,7 @@ public class UsuarioResponseDTO {
     }
 
     // 🔥 CONSTRUCTOR ACTUALIZADO: Ahora recibe el avatar
-    public UsuarioResponseDTO(Long id, String nombre, String email, Integer edad, String genero, Float peso, String nivel, String objetivos, Long gimnasioId, String avatar) {
+    public UsuarioResponseDTO(Long id, String nombre, String email, Integer edad, String genero, Float peso, String nivel, String objetivos, Long gimnasioId, String avatar, String biografia, String gimnasioNombre) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -38,7 +41,9 @@ public class UsuarioResponseDTO {
         this.nivel = nivel;
         this.objetivos = objetivos;
         this.gimnasioId = gimnasioId; 
-        this.avatar = avatar; // <-- Asignamos el avatar
+        this.avatar = avatar; 
+        this.biografia = biografia;
+        this.gimnasioNombre = gimnasioNombre; 
     }
 
     // Getters y Setters
@@ -77,4 +82,15 @@ public class UsuarioResponseDTO {
     
     public Boolean getSolicitudPendiente() { return solicitudPendiente; }
     public void setSolicitudPendiente(Boolean solicitudPendiente) { this.solicitudPendiente = solicitudPendiente; }
+
+     public String getBiografia() {
+        return biografia;
+    }
+
+    public void setBiografia(String biografia) {
+        this.biografia = biografia;
+    }
+    
+    public String getGimnasioNombre() { return gimnasioNombre; }
+    public void setGimnasioNombre(String gimnasioNombre) { this.gimnasioNombre = gimnasioNombre; }
 }

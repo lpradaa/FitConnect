@@ -7,8 +7,8 @@
         Tu constancia está dando frutos. Hoy tienes <strong>{{ newProfiles() }} nuevos perfiles compatibles</strong> en tu gimnasio habitual.
       </p>
       <div style="display: flex; gap: 10px;">
-        <button class="welcome-card__button">👀 Ver sugerencias</button>
-        <button class="welcome-card__button welcome-card__button--outline" (click)="abrirModal()">⚙️ Editar Mi Perfil</button>
+        <button type="button" class="welcome-card__button" (click)="buscarTopMatch(); $event.stopPropagation()">👀 Ver sugerencias</button>
+        <button type="button" class="welcome-card__button welcome-card__button--outline" (click)="abrirModal(); $event.stopPropagation()">⚙️ Editar Mi Perfil</button>
       </div>
     </div>
 
@@ -35,14 +35,7 @@
       <span class="meta-card__value">{{ totalDays() }} {{ totalDays() === 1 ? 'día' : 'días' }}</span>
     </div>
     <div class="meta-card__slider-container">
-      <input 
-        type="range" 
-        min="1" 
-        max="7" 
-        [value]="totalDays()" 
-        (input)="actualizarMetaDesdeSlider($event)"
-        class="slider"
-      />
+      <input type="range" min="1" max="7" [value]="totalDays()" (input)="actualizarMetaDesdeSlider($event)" class="slider" />
       <div class="meta-card__slider-labels">
         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
       </div>
@@ -68,25 +61,15 @@
                   {{ user.nivel || 'Intermedio' }}
                 </span>
               </div>
-              
-              <p class="match-card__gym">
-                <span>📍</span> {{ user.gimnasio?.nombre || 'Gimnasio Habitual' }}
-              </p>
+              <p class="match-card__gym"><span>📍</span> {{ user.gimnasio?.nombre || 'Gimnasio Habitual' }}</p>
             </div>
 
             <div class="match-card__actions" style="display: flex; gap: 10px;">
-              <button *ngIf="!user.yaConectado"
-                class="match-card__btn" 
-                (click)="conectarConUsuario(user.id)"
-                [disabled]="user.solicitudPendiente"
-                [style.opacity]="user.solicitudPendiente ? 0.5 : 1">
+              <button *ngIf="!user.yaConectado" class="match-card__btn" (click)="conectarConUsuario(user.id)" [disabled]="user.solicitudPendiente" [style.opacity]="user.solicitudPendiente ? 0.5 : 1">
                 {{ user.solicitudPendiente ? '⏳ Pendiente' : '👋 Conectar' }}
               </button>
               
-              <button *ngIf="user.yaConectado"
-                class="match-card__btn" 
-                style="background-color: #2ecc71; border-color: #2ecc71;" 
-                (click)="irAlChat(user.id)">
+              <button *ngIf="user.yaConectado" class="match-card__btn" style="background-color: #2ecc71; border-color: #2ecc71;" (click)="irAlChat(user.id)">
                 💬 Chatear
               </button>
             </div>
@@ -96,7 +79,6 @@
     </div>
 
     <aside class="sidebar-column">
-
       <div class="notifications-widget" *ngIf="solicitudesPendientes.length > 0">
         <div class="notifications-header">
           <h3>🔔 Solicitudes Nuevas</h3>
@@ -104,9 +86,7 @@
         </div>
         <div class="request-list">
           <div class="request-item" *ngFor="let sol of solicitudesPendientes">
-            <div class="request-info">
-              <strong>{{ sol.emisorNombre }}</strong> te ha enviado una solicitud.
-            </div>
+            <div class="request-info"><strong>{{ sol.emisorNombre }}</strong> te ha enviado una solicitud.</div>
             <div class="request-actions">
               <button class="btn-accept" (click)="responderSolicitud(sol.id, 'ACEPTADA')" title="Aceptar">✅</button>
               <button class="btn-reject" (click)="responderSolicitud(sol.id, 'RECHAZADA')" title="Rechazar">❌</button>
@@ -131,9 +111,8 @@
       <div class="workouts-widget">
         <div class="workouts-header">
           <h3>Mi Actividad</h3>
-          <button class="add-workout-btn" (click)="abrirModalEntrenamiento()">+ Registrar</button>
+          <button type="button" class="add-workout-btn" (click)="abrirModalEntrenamiento(); $event.stopPropagation()">+ Registrar</button>
         </div>
-        
         <div class="workout-timeline">
           <div class="timeline-item" *ngFor="let ent of historialEntrenamientos">
             <div class="timeline-icon">🔥</div>
@@ -145,8 +124,58 @@
           <p *ngIf="historialEntrenamientos.length === 0" class="empty-state">Aún no has registrado entrenamientos. ¡Empieza hoy!</p>
         </div>
       </div>
-
     </aside>
+  </div>
+</div>
+
+<div class="top-match-overlay" *ngIf="isTopMatchModalOpen" (click)="cerrarTopMatchModal()">
+  <div class="top-match-content" (click)="$event.stopPropagation()">
+    
+    <div class="calculating-state" *ngIf="isCalculatingMatch">
+      <div class="radar-spinner"></div>
+      <h3>Ejecutando algoritmo...</h3>
+      <p>Cruzando horarios, niveles y gimnasios en la base de datos de FitConnect.</p>
+    </div>
+
+    <div class="match-found-state" *ngIf="!isCalculatingMatch && topMatchUser">
+      <button type="button" class="close-btn-absolute" (click)="cerrarTopMatchModal()">✕</button>
+
+      <button type="button" class="nav-arrow nav-arrow--left" (click)="anteriorMatch(); $event.stopPropagation()" *ngIf="currentMatchIndex > 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <button type="button" class="nav-arrow nav-arrow--right" (click)="siguienteMatch(); $event.stopPropagation()" *ngIf="currentMatchIndex < disponiblesList.length - 1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      
+      <div class="match-header">
+        <span class="match-badge">⭐ COMPAÑERO {{ currentMatchIndex + 1 }} DE {{ disponiblesList.length }}</span>
+      </div>
+      
+      <div class="match-avatar-glow">
+        <span>{{ topMatchUser?.avatar ? topMatchUser.avatar : (topMatchUser?.nombre ? topMatchUser.nombre.charAt(0).toUpperCase() : 'U') }}</span>
+      </div>
+      
+      <h2>{{ topMatchUser?.nombre || 'Compañero' }}</h2>
+      
+      <div class="match-reasons">
+        <div class="reason-item">📍 {{ topMatchUser?.gimnasio?.nombre || 'Comparte tu Gimnasio' }}</div>
+        <div class="reason-item">⏱️ Horarios 100% compatibles</div>
+        <div class="reason-item">📈 Mismo Nivel: {{ topMatchUser?.nivel }}</div>
+      </div>
+
+      <button type="button" class="btn-connect-giant" (click)="conectarConTopMatch()">
+        👋 ¡Enviar Solicitud a {{ topMatchUser?.nombre ? topMatchUser.nombre.split(' ')[0] : 'este usuario' }}!
+      </button>
+    </div>
+
+    <div class="no-match-state" *ngIf="!isCalculatingMatch && !topMatchUser">
+      <button type="button" class="close-btn-absolute" (click)="cerrarTopMatchModal()">✕</button>
+      <div class="empty-icon">🏜️</div>
+      <h2>Sin coincidencias exactas</h2>
+      <p>Has conectado o revisado a todos los usuarios que coinciden perfectamente con tu horario. ¡Prueba a cambiar tu disponibilidad en el perfil!</p>
+      <button type="button" class="btn-cancel-giant" (click)="cerrarTopMatchModal()">Volver al Dashboard</button>
+    </div>
   </div>
 </div>
 
@@ -158,10 +187,10 @@
     </div>
     <div class="modal-body">
       <div class="form-section">
-        <h3>1. Elige tu Avatar</h3>
-        <div class="avatar-preview">Tu avatar actual: <span>{{ perfilForm.avatar }}</span></div>
+        <h3>Elige tu Avatar</h3>
+        <div class="avatar-preview">Actual: <span>{{ perfilForm.avatar }}</span></div>
         <div class="emoji-grid">
-          <button *ngFor="let emoji of emojisDisponibles" 
+          <button type="button" *ngFor="let emoji of emojisDisponibles" 
                   class="emoji-btn" 
                   [class.active]="perfilForm.avatar === emoji"
                   (click)="seleccionarAvatar(emoji)">
@@ -169,9 +198,18 @@
           </button>
         </div>
       </div>
+
       <div class="form-section">
-        <h3>2. Datos Físicos y Objetivos</h3>
+        <h3>Datos Físicos</h3>
         <div class="form-grid">
+          <div class="input-group">
+            <label>Edad</label>
+            <input type="number" [(ngModel)]="perfilForm.edad">
+          </div>
+          <div class="input-group">
+            <label>Peso (kg)</label>
+            <input type="number" [(ngModel)]="perfilForm.peso">
+          </div>
           <div class="input-group">
             <label>Nivel</label>
             <select [(ngModel)]="perfilForm.nivel">
@@ -181,7 +219,7 @@
             </select>
           </div>
           <div class="input-group">
-            <label>Objetivo Principal</label>
+            <label>Objetivo</label>
             <select [(ngModel)]="perfilForm.objetivos">
               <option value="Hipertrofia">Hipertrofia</option>
               <option value="Fuerza">Fuerza</option>
@@ -189,27 +227,21 @@
               <option value="Resistencia">Resistencia</option>
             </select>
           </div>
-          <div class="input-group"><label>Edad</label><input type="number" [(ngModel)]="perfilForm.edad"></div>
-          <div class="input-group"><label>Peso (Kg)</label><input type="number" [(ngModel)]="perfilForm.peso"></div>
-          <div class="input-group"><label>Género</label><input type="text" [(ngModel)]="perfilForm.genero"></div>
-          <div class="input-group"><label>ID Gimnasio</label><input type="number" [(ngModel)]="perfilForm.gimnasioId"></div>
         </div>
       </div>
+
       <div class="form-section">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3>3. Horarios de Entrenamiento</h3>
-          <button class="add-btn" (click)="agregarHorario()">+ Añadir día</button>
-        </div>
-        <div class="horario-row" *ngFor="let h of perfilForm.horarios; let i = index">
+        <h3>Disponibilidad Horaria</h3>
+        <div *ngFor="let h of perfilForm.horarios; let i = index" class="horario-row">
           <select [(ngModel)]="h.diaSemana">
             <option *ngFor="let dia of diasSemana" [value]="dia">{{ dia }}</option>
           </select>
           <input type="time" [(ngModel)]="h.horaInicio">
-          <span>a</span>
+          <span> a </span>
           <input type="time" [(ngModel)]="h.horaFin">
-          <button class="delete-btn" (click)="eliminarHorario(i)">🗑️</button>
+          <button type="button" class="delete-btn" (click)="eliminarHorario(i)">❌</button>
         </div>
-        <p *ngIf="perfilForm.horarios.length === 0" style="color: #64748b; font-size: 14px;">No tienes horarios añadidos. ¡Añade uno para encontrar matches!</p>
+        <button type="button" class="add-btn" (click)="agregarHorario()">+ Añadir horario</button>
       </div>
     </div>
     <div class="modal-footer">
@@ -220,7 +252,7 @@
 </div>
 
 <div class="modal-overlay" *ngIf="isEntrenamientoModalOpen" (click)="cerrarModalEntrenamiento()">
-  <div class="modal-content" style="max-width: 400px;" (click)="$event.stopPropagation()">
+  <div class="modal-content" style="max-width: 500px;" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>🏋️ Registrar Entrenamiento</h2>
       <button class="close-btn" (click)="cerrarModalEntrenamiento()">✕</button>
@@ -246,4 +278,9 @@
       <button class="btn-save" (click)="guardarEntrenamiento()">Guardar</button>
     </div>
   </div>
+</div>
+
+<div class="custom-toast" [class.show]="toast.show" [class.error]="toast.type === 'error'">
+  <div class="toast-icon">{{ toast.type === 'error' ? '❌' : '✅' }}</div>
+  <div class="toast-message">{{ toast.message }}</div>
 </div>

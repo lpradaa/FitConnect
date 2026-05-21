@@ -1,29 +1,100 @@
-<div class="connections-container">
-  <h2>Mis Compañeros de Entrenamiento</h2>
-  <p>Haz clic en cualquiera de tus conexiones para empezar a hablar y coordinar el entreno.</p>
+<div class="whatsapp-layout">
+  
+  <aside class="sidebar">
+    <header class="sidebar-header">
+      <h2>Mis Compañeros</h2>
+    </header>
 
-  @if (conexiones.length === 0) {
-    <div class="no-connections">
-      <p>Aún no tienes conexiones aceptadas. ¡Sigue explorando el dashboard!</p>
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar un chat..." [(ngModel)]="busqueda">
+      </div>
     </div>
-  } @else {
-    <div class="connections-list">
-      @for (solicitud of conexiones; track solicitud.id) {
-        <div class="connection-card" (click)="abrirChat(solicitud)">
-          <div class="avatar">
-            <span>
-              {{ solicitud.emisorId === miId ? solicitud.receptorNombre.charAt(0).toUpperCase() : solicitud.emisorNombre.charAt(0).toUpperCase() }}
-            </span>
-          </div>
-          
-          <div class="info">
-            <h3>{{ solicitud.emisorId === miId ? solicitud.receptorNombre : solicitud.emisorNombre }}</h3>
-            <p>🏋️‍♂️ ¡Conexión establecida!</p>
-          </div>
-          
-          <button class="btn-chat">💬 Chatear</button>
+
+    <div class="contacts-list">
+      @if (conexiones.length === 0) {
+        <div class="empty-contacts">
+          <p>Aún no tienes conexiones. ¡Explora el dashboard!</p>
         </div>
+      } @else {
+        @for (solicitud of conexionesFiltradas; track solicitud.id) {
+          <div class="contact-card" 
+               [class.active]="chatActivo?.id === (solicitud.emisorId === miId ? solicitud.receptorId : solicitud.emisorId)"
+               (click)="abrirChat(solicitud)">
+            
+            <div class="avatar">
+              {{ solicitud.emisorId === miId ? solicitud.receptorNombre.charAt(0).toUpperCase() : solicitud.emisorNombre.charAt(0).toUpperCase() }}
+            </div>
+            
+            <div class="info">
+              <h3>{{ solicitud.emisorId === miId ? solicitud.receptorNombre : solicitud.emisorNombre }}</h3>
+              <p>Toca para ver el chat</p>
+            </div>
+          </div>
+        }
       }
     </div>
-  }
+  </aside>
+
+  <main class="chat-area">
+    
+    @if (!chatActivo) {
+      <div class="welcome-screen">
+        <div class="welcome-content">
+          <div class="icon">⚡</div>
+          <h1>FitConnect Chat</h1>
+          <p>Selecciona un compañero en el menú lateral para empezar a organizar tu próximo entrenamiento.</p>
+        </div>
+      </div>
+    } 
+    @else {
+      <header class="chat-header">
+        <div class="chat-header__profile">
+          <div class="avatar-circle">{{ chatActivo.avatar }}</div>
+          <div class="user-info">
+            <h2>{{ chatActivo.nombre }}</h2>
+            <span>Compañero de entrenamiento</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-body" #scrollMe>
+        <div class="chat-date-separator"><span>Historial de Chat</span></div>
+
+        @for (msg of historial; track msg.id) {
+          <div class="message-row" [ngClass]="{'sent': msg.emisorId !== chatActivo.id, 'received': msg.emisorId === chatActivo.id}">
+            <div class="bubble">
+              <p class="content">{{ msg.contenido }}</p>
+              <div class="message-meta">
+                <span class="time">{{ msg.fechaEnvio | date:'shortTime' }}</span>
+                <span *ngIf="msg.emisorId !== chatActivo.id" class="ticks">✓✓</span>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <div class="empty-icon">👋</div>
+            <p>Aún no hay mensajes.</p>
+            <span>¡Rompe el hielo y propón una hora para entrenar!</span>
+          </div>
+        }
+      </div>
+
+      <footer class="chat-footer">
+        <div class="emoji-menu" *ngIf="mostrarEmojis">
+          <span *ngFor="let emoji of emojisRapidos" (click)="addEmoji(emoji)">{{ emoji }}</span>
+        </div>
+
+        <button class="btn-attach" (click)="toggleEmojis()" [class.active]="mostrarEmojis">😊</button>
+        
+        <input type="text" class="chat-input" [(ngModel)]="nuevoMensaje" (keyup.enter)="enviar()" placeholder="Escribe un mensaje..." />
+        
+        <button class="btn-enviar" (click)="enviar()" [disabled]="!nuevoMensaje.trim()">
+          <svg *ngIf="nuevoMensaje.trim()" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+          <svg *ngIf="!nuevoMensaje.trim()" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.468 2.349 8.468 4.35v7.061c0 2.001 1.53 3.531 3.531 3.531zM8.968 4.35c0-1.668 1.365-3.031 3.031-3.031s3.031 1.363 3.031 3.031v7.061c0 1.668-1.365 3.031-3.031 3.031s-3.031-1.363-3.031-3.031V4.35zm9.531 7.061h-1.5c0 2.766-2.25 5-5 5s-5-2.234-5-5h-1.5c0 3.167 2.281 5.797 5.25 6.229v3.083h2.5v-3.083c2.969-.432 5.25-3.062 5.25-6.229z"></path></svg>
+        </button>
+      </footer>
+    }
+  </main>
 </div>
