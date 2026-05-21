@@ -1,11 +1,15 @@
 import { Component, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common'; // 🔥 Añadido
+import { RouterModule } from '@angular/router'; // 🔥 Añadido
 
 @Component({
   selector: 'app-explore',
-  imports: [],
+  standalone: true, // Asegúrate de que ponga standalone: true
+  imports: [CommonModule, RouterModule], // 🔥 Añadidos aquí
   templateUrl: './explore.html',
   styleUrl: './explore.scss'
 })
+
 export class Explore {
   // Datos base de Luis para comparar
   currentUser = signal({
