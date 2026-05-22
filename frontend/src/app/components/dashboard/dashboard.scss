@@ -1,5 +1,5 @@
-/* Usamos @use en lugar de @import para cumplir con las nuevas normas de Sass */
-@use '../../../scss/index' as *;
+@import '../../../scss/index';
+
 
 .dashboard {
   padding: $space-lg;

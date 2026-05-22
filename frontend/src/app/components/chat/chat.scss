@@ -1,13 +1,4 @@
-// Variables de color "WhatsApp Style"
-$chat-bg: #efeae2; 
-$header-bg: #008069; // Verde WhatsApp oscuro
-$header-text: #ffffff;
-$bubble-sent: #d9fdd3; // Verde claro WhatsApp
-$bubble-received: #ffffff;
-$text-main: #111b21;
-$text-muted: #667781;
-$accent-color: #00a884; // Botón enviar
-$chat-pattern: "https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png";
+@import '../../../scss/index';
 
 .chat-wrapper {
   max-width: 800px;
