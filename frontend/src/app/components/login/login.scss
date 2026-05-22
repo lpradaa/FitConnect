@@ -1,165 +1,204 @@
-@import '../../../scss/index';
+@use '../../../scss/index' as *;
 
-/* --- Contenedor Principal --- */
+/* --- Contenedor Principal y Fondos --- */
 .login-wrapper {
+  position: relative;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #f8fafc;
+  overflow: hidden;
   padding: $space-md;
 }
 
-/* --- Tarjeta del Login --- */
-.login-card {
+/* Efecto Glassmorphism / Blobs animados en el fondo */
+.blob {
+  position: absolute;
+  filter: blur(80px);
+  z-index: 0;
+  border-radius: 50%;
+  animation: float 10s infinite ease-in-out alternate;
+  opacity: 0.5;
+
+  &-1 { width: 400px; height: 400px; background: rgba(#4ade80, 0.4); top: -100px; left: -100px; animation-delay: 0s; }
+  &-2 { width: 500px; height: 500px; background: rgba(#2dd4bf, 0.3); bottom: -150px; right: -100px; animation-delay: 2s; }
+  &-3 { width: 300px; height: 300px; background: rgba(#3b82f6, 0.2); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 4s; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(30px) scale(1.1); }
+}
+
+/* --- Tarjeta Contenedora Principal --- */
+.login-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
   width: 100%;
-  max-width: 500px;
-  background-color: $bg-card;
+  max-width: 1000px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden; /* Corta los bordes para el panel izquierdo */
+  min-height: 600px;
+}
+
+/* --- Panel Izquierdo (Branding) --- */
+.login-branding {
+  width: 45%;
+  background: linear-gradient(135deg, $accent 0%, darken($accent, 15%) 100%);
+  color: white;
   padding: $space-xl;
-  border-radius: $radius-lg;
-  border-top: 4px solid $accent;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  margin-bottom: $space-lg;
-  box-sizing: border-box;
-}
-
-/* --- Cabecera --- */
-.login-header {
-  text-align: center;
-  margin-bottom: $space-lg;
-
-  .login-logo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: $space-md;
-  
-    .logo-isotipo {
-      height: 50px; 
-      width: auto;
-      transition: transform 0.3s ease;
-      &:hover {
-        transform: scale(1.05);
-      }
-    }
-  }
-
-  .title {
-    font-size: $text-4xl;
-    font-weight: $font-extrabold;
-    color: $text-main;
-    margin: 0 0 $space-xs 0;
-  }
-
-  .subtitle {
-    color: $text-muted;
-    font-size: $text-base;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .brand-text {
-    font-weight: $font-bold;
-    color: $accent;
-  }
-}
-
-/* --- Formulario --- */
-.login-form {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
-}
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 
-/* Grupos de input */
-.form-group {
-  label {
-    display: block;
-    font-size: $text-sm;
-    font-weight: $font-semibold;
-    color: $text-main;
-    margin-bottom: $space-xs;
+  /* Detalle de diseño: círculo decorativo de fondo */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .branding-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo-giant {
+    height: 80px;
+    margin-bottom: $space-md;
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  h2 { font-size: $text-3xl; font-weight: $font-extrabold; margin-bottom: $space-xs; letter-spacing: -0.5px; }
+  p { font-size: $text-base; opacity: 0.9; margin-bottom: $space-xl; line-height: 1.5; }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-md;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.1);
+    padding: $space-lg;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .feature-item {
+      display: flex; align-items: center; gap: 12px; font-weight: $font-semibold; font-size: 15px;
+      span { font-size: 20px; }
+    }
   }
 }
 
-/* Contenedor relativo para posicionar el icono */
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- Panel Derecho (Formulario) --- */
+.login-form-section {
+  width: 55%;
+  padding: 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Ocultar panel izquierdo en móviles */
+@media (max-width: 850px) {
+  .login-container { flex-direction: column; }
+  .login-branding { display: none; }
+  .login-form-section { width: 100%; padding: 40px 30px; }
+}
+
+/* --- Cabecera del Formulario --- */
+.login-header {
+  margin-bottom: $space-xl;
+  
+  .title { font-size: $text-3xl; font-weight: $font-extrabold; color: $text-main; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+  .subtitle { color: $text-muted; font-size: $text-base; margin: 0; }
+}
+
+/* --- Inputs y Formularios --- */
+.login-form { display: flex; flex-direction: column; gap: $space-md; }
+.form-row { display: flex; gap: $space-md; }
+.half-width { flex: 1; }
+
+.form-group {
+  label { display: block; font-size: 13px; font-weight: 700; color: $text-main; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+}
+
 .input-container {
   position: relative;
 
   .icon {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: $space-sm;
-    display: flex;
-    align-items: center;
-    font-size: $text-lg;
-    color: $text-placeholder; 
+    position: absolute; top: 50%; transform: translateY(-50%); left: 16px; display: flex; align-items: center; color: #94a3b8; transition: color 0.2s;
   }
 
-  input {
-    width: 100%;
-    padding: 12px $space-sm 12px 44px; 
-    background-color: $input-bg;
-    border: 1px solid $border;
-    border-radius: $radius-md;
-    font-size: $text-sm;
-    color: $text-main;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-    outline: none;
-
-    &::placeholder {
-      color: $text-placeholder;
-    }
-
+  input, select {
+    width: 100%; padding: 14px 16px 14px 45px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 15px; color: $text-main; font-weight: 500; transition: all 0.3s ease; outline: none; appearance: none;
+    
+    &::placeholder { color: #94a3b8; font-weight: 400; }
+    
     &:focus {
-      border-color: $accent;
-      background-color: $bg-card;
-      box-shadow: 0 0 0 3px rgba($accent, 0.15); 
+      background-color: white; border-color: $accent; box-shadow: 0 0 0 4px rgba($accent, 0.15);
+      + .icon, ~ .icon { color: $accent; } /* Ilumina el icono al hacer focus */
     }
   }
+
+  /* Flecha personalizada para el select */
+  &.select-container::after {
+    content: "▼"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 10px; color: #94a3b8; pointer-events: none;
+  }
+}
+
+/* --- Banner de Error --- */
+.error-banner {
+  background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
 }
 
 /* --- Botón de Submit --- */
 .submit-btn {
-  width: 100%;
-  margin-top: $space-xs;
-  background: linear-gradient(90deg, $accent 0%, $gradient-end 100%);
-  color: white;
-  border: none;
-  padding: $space-sm;
-  border-radius: $radius-md;
-  font-weight: $font-bold;
-  font-size: $text-base;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-xs;
-  box-shadow: 0 4px 14px 0 rgba($accent, 0.35); 
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  span {
-    transition: transform 0.2s ease;
+  width: 100%; margin-top: 10px; background: $accent; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 20px -10px $accent; transition: all 0.2s ease;
+  
+  .arrow { transition: transform 0.2s ease; }
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px); box-shadow: 0 15px 25px -10px $accent; background: darken($accent, 5%);
+    .arrow { transform: translateX(5px); }
   }
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba($accent, 0.45);
-    
-    span:last-child {
-      transform: translateX(4px); 
-    }
-  }
+  &:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
 }
+
+/* Spinner CSS */
+.spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* --- Footer --- */
 .login-footer {
-  text-align: center;
-  color: $text-muted;
-  font-size: $text-sm;
-
-  span {
-    color: $text-placeholder;
+  text-align: center; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;
+  
+  p { color: $text-muted; font-size: 15px; margin: 0; }
+  
+  .toggle-btn {
+    background: none; border: none; color: $accent; font-weight: 700; font-size: 15px; cursor: pointer; padding: 0 5px; transition: color 0.2s;
+    &:hover { color: darken($accent, 10%); text-decoration: underline; }
   }
 }

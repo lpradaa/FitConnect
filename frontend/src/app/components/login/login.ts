@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.scss' // OJO: he cambiado .css a .scss para que coincida con tu archivo
 })
 export class LoginComponent {
   private authService = inject(AuthService);
@@ -17,6 +17,9 @@ export class LoginComponent {
 
   // 🔄 Interruptor de modo (Login vs Registro)
   isLoginMode = true;
+
+  // ⏳ Estado de carga para dar feedback visual al botón
+  isLoading = signal(false);
 
   // Variables bindeadas al formulario
   email = '';
@@ -32,12 +35,14 @@ export class LoginComponent {
   // Alternar entre pantallas
   toggleMode(): void {
     this.isLoginMode = !this.isLoginMode;
-    this.errorMessage.set(null); // Limpiamos errores al cambiar de modo
+    this.errorMessage.set(null); 
   }
 
   // Función principal que decide qué hacer al darle al botón
   onSubmit(): void {
     this.errorMessage.set(null);
+    this.isLoading.set(true); // Bloqueamos el botón
+
     if (this.isLoginMode) {
       this.ejecutarLogin();
     } else {
@@ -51,10 +56,12 @@ export class LoginComponent {
     this.authService.login(credenciales).subscribe({
       next: (response) => {
         console.log('¡Login correcto! Token guardado de forma segura.');
+        this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Error en el login:', err);
+        this.isLoading.set(false);
         this.errorMessage.set('Email o contraseña incorrectos. Inténtalo de nuevo.');
       }
     });
@@ -73,16 +80,13 @@ export class LoginComponent {
     this.authService.register(nuevoUsuario).subscribe({
       next: (response) => {
         console.log('¡Cuenta creada con éxito! Iniciando sesión automáticamente...');
-        
-        // 🔥 LA MAGIA: En lugar de mandarlo a la pantalla de login, 
-        // llamamos directamente a la función de login por debajo de la mesa.
-        this.ejecutarLogin();
+        this.ejecutarLogin(); // Redirige al login automáticamente
       },
       error: (err) => {
         console.error('Error en el registro:', err);
-        this.errorMessage.set('Hubo un problema al crear la cuenta. Revisa los datos o prueba con otro email.');
+        this.isLoading.set(false);
+        this.errorMessage.set('Hubo un problema al crear la cuenta. Revisa los datos.');
       }
     });
   }
-  
 }

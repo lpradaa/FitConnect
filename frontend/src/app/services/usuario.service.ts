@@ -10,6 +10,7 @@ export class UsuarioService {
   private apiUrlUsuarios = 'http://localhost:8080/api/usuarios';
   private apiUrlSolicitudes = 'http://localhost:8080/api/solicitudes';
   private apiUrlEntrenamientos = 'http://localhost:8080/api/entrenamientos';
+  private apiUrlGimnasios = 'http://localhost:8080/api/gimnasios'; // 🔥 NUEVO
 
   constructor(private http: HttpClient) {}
 
@@ -55,7 +56,7 @@ export class UsuarioService {
     return this.http.put<any>(`${this.apiUrlUsuarios}/perfil`, perfilData, { headers });
   }
 
-  // 🔥 NUEVO: 7. Obtener mi perfil real (incluyendo el Avatar)
+  // 7. Obtener mi perfil real (incluyendo el Avatar)
   getMiPerfil(): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
@@ -80,9 +81,10 @@ export class UsuarioService {
     return this.http.get<any[]>(`${this.apiUrlUsuarios}/explorar`, { headers });
   }
 
-  
-getGimnasios(): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrlUsuarios}/gimnasios`);
-}
-
+  // 🔥 CORREGIDO: Ruta URL correcta y se le pasa el Token JWT
+  getGimnasios(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    return this.http.get<any[]>(this.apiUrlGimnasios, { headers });
+  }
 }

@@ -38,11 +38,11 @@ public class SecurityConfig {
             
             // 3. Filtramos las rutas protegidas y públicas
             .authorizeHttpRequests(auth -> auth
-                // 🔥 MODIFICADO: Permitimos el login, el registro y la ruta de /error sin necesidad de token
+                // Permitimos el login, el registro y la ruta de /error sin necesidad de token
                 .requestMatchers("/api/auth/**", "/api/usuarios/registro", "/error").permitAll()
                 
-                // Las rutas de usuarios y matches requieren autenticación global
-                .requestMatchers("/api/usuarios/**").authenticated() 
+                // 🔥 MODIFICADO: Añadimos explícitamente /api/gimnasios a las rutas que requieren estar logueado
+                .requestMatchers("/api/usuarios/**", "/api/gimnasios/**").authenticated() 
                 
                 // Cualquier otra petición necesitará estar logueado
                 .anyRequest().authenticated()

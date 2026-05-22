@@ -27,13 +27,18 @@ export class DashboardComponent implements OnInit {
   usuariosCompatibles: any[] = [];
   solicitudesPendientes: any[] = [];
 
+  // --- VARIABLES PARA GIMNASIOS (Restauradas) ---
+  gimnasios: any[] = [];
+  nuevoGimnasioNombre: string = '';
+  mostrarInputGimnasio: boolean = false;
+
   // --- VARIABLES MODAL PERFIL ---
   isModalOpen = false;
   emojisDisponibles = ['💪', '🏋️', '🏃', '🧘', '🚴', '🥊', '🤸', '🏊', '🏆', '🔥', '🦍', '🦄'];
   diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   
   perfilForm: any = {
-    avatar: '💪', edad: null, genero: '', peso: null, nivel: 'Intermedio', objetivos: '', gimnasioId: null, horarios: [], metaSemanal: 4
+    avatar: '💪', edad: null, genero: '', peso: null, nivel: 'Intermedio', objetivos: '', gimnasioId: null, nuevoGimnasioNombre: '', horarios: [], metaSemanal: 4
   };
 
   // --- VARIABLES MODAL ENTRENAMIENTO ---
@@ -56,6 +61,7 @@ export class DashboardComponent implements OnInit {
     this.cargarMatches();
     this.cargarHistorialEntrenamientos();
     this.cargarSolicitudesPendientes();
+    this.cargarGimnasios(); // Aseguramos que cargan los gimnasios
     
     this.usuarioService.getMiPerfil().subscribe({
       next: (data) => {
@@ -74,6 +80,18 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => console.error('Error al cargar mi perfil:', err)
     });
+  }
+
+  // --- GIMNASIOS ---
+  cargarGimnasios() {
+    this.usuarioService.getGimnasios().subscribe((data: any) => this.gimnasios = data);
+  }
+
+  toggleNuevoGimnasio(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.mostrarInputGimnasio = (selectElement.value === 'NUEVO');
+    if (!this.mostrarInputGimnasio) this.nuevoGimnasioNombre = '';
+    this.cdr.detectChanges();
   }
 
   // 🔥 FUNCIÓN PARA MOSTRAR EL TOAST (Reemplaza a los alert)
@@ -162,10 +180,12 @@ export class DashboardComponent implements OnInit {
     lunes.setHours(0, 0, 0, 0);
 
     const entrenosEstaSemana = this.historialEntrenamientos.filter(ent => new Date(ent.fecha) >= lunes);
-    const diasUnicos = new Set(entrenosEstaSemana.map(ent => ent.fecha)).size;
     
-    this.completedDays.set(diasUnicos);
-    let porcentaje = (diasUnicos / meta) * 100;
+    // 🔥 CORRECCIÓN: Contamos el total de entrenamientos (length), ya no filtramos por "días únicos"
+    const totalEntrenos = entrenosEstaSemana.length;
+    
+    this.completedDays.set(totalEntrenos);
+    let porcentaje = (totalEntrenos / meta) * 100;
     this.progressPercentage.set(porcentaje > 100 ? 100 : porcentaje);
   }
 
@@ -236,6 +256,13 @@ export class DashboardComponent implements OnInit {
   
   guardarPerfil(): void {
     localStorage.setItem('meta_semanal_' + this.userName(), this.perfilForm.metaSemanal.toString());
+    
+    // Restaurado: Enviar nuevo gimnasio si el usuario lo creó
+    if (this.mostrarInputGimnasio) {
+      this.perfilForm.nuevoGimnasioNombre = this.nuevoGimnasioNombre;
+      this.perfilForm.gimnasioId = null;
+    }
+
     this.usuarioService.actualizarPerfil(this.perfilForm).subscribe({
       next: () => { 
         this.mostrarToast('¡Perfil actualizado con éxito!', 'success'); 
